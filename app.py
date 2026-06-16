@@ -2,147 +2,207 @@ import streamlit as st
 import pandas as pd
 import joblib
 import plotly.express as px
+import base64
+import os
 
 st.set_page_config(
-    page_title="Shopping Trends & Predictive Intelligence Hub",
+    page_title="Promo Code Prediction Dashboard",
     page_icon="🛍️",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
-# Hệ thống CSS nâng cao chuẩn doanh nghiệp - Tập trung làm nổi bật Sidebar
+# Hàm mã hóa ảnh cục bộ sang Base64 để nhúng vào CSS làm hình nền ổn định
+def get_base64_image(image_path):
+    if os.path.exists(image_path):
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    return ""
+
+img_base64 = get_base64_image("images.jpg")
+
 st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&display=swap');
 
+/* Tạo lớp nền mờ sử dụng file ảnh images.jpg */
+.stApp::before {{
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("data:image/jpeg;base64,{img_base64}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.06; 
+    z-index: -1;
+}}
+
 .stApp {{
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%) !important;
-    color: #1e293b; 
+    background: transparent;
+    color: #334155; 
     font-family: 'Inter', sans-serif;
 }}
 
 .block-container {{
-    padding: 2rem 5rem !important;
+    padding: 2.5rem 4rem;
 }}
 
-/* =========================================================================
-   ĐẠI TU SIDEBAR BÊN TRÁI - LÀM CHỮ NỔI BẬT KHÔNG BỊ CHÌM VÀO BACKGROUND
-   ========================================================================= */
+/* Tinh chỉnh UI Thanh bên (Sidebar) nổi bật và nhã nhặn */
 section[data-testid="stSidebar"] {{
-    background: #ffffff !important; /* Đổi sang nền trắng thuần để tăng độ tương phản */
-    border-right: 1px solid #cbd5e1;
-    box-shadow: 4px 0 24px rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(25px);
+    border-right: 1px solid rgba(226, 232, 240, 0.9);
+    padding: 1.5rem 0.5rem;
 }}
 
-/* Tiêu đề chính của Sidebar */
 section[data-testid="stSidebar"] .stMarkdown h2 {{
-    color: #0f172a !important; /* Chữ đen đậm siêu rõ */
+    color: #0f172a !important;
     font-weight: 800 !important;
-    font-size: 1.3rem !important;
     letter-spacing: -0.5px;
-    border-bottom: 3px solid #0ea5e9;
-    padding-bottom: 10px;
+    border-bottom: 2px solid #4ade80;
+    padding-bottom: 8px;
     margin-bottom: 1.5rem !important;
 }}
 
-/* Chữ tiêu đề của từng hộp Expander trong Sidebar */
-section[data-testid="stSidebar"] .stMarkdown h3, 
-section[data-testid="stSidebar"] p[data-testid="stWidgetLabel"] p,
-section[data-testid="stSidebar"] span[data-testid="stMarkdownContainer"] p {{
-    color: #0f172a !important; /* Cưỡng ép màu chữ đen đậm nổi bật hẳn lên */
-    font-weight: 700 !important;
-}}
-
-/* Tinh chỉnh nhãn điều khiển input trong Sidebar */
+/* Làm nổi bật nhãn tiêu đề của các ô nhập dữ liệu */
 div[data-testid="stWidgetLabel"] p {{
     font-weight: 700 !important;
-    color: #1e293b !important; /* Màu nhãn input rõ ràng, sắc nét */
-    font-size: 0.9rem !important;
+    color: #1e293b !important;
+    font-size: 0.95rem !important;
 }}
 
-/* Làm nổi bật phần nền và đường viền của các ô nhập liệu Selectbox */
+/* Tinh chỉnh thiết kế cho Selectbox / Dropdown input */
 .stSelectbox div[data-baseweb="select"] {{
-    border: 1px solid #94a3b8 !important; /* Viền đậm hơn */
-    border-radius: 8px !important;
-    background-color: #f8fafc !important;
-}}
-
-/* Nền của các hộp Expander trong Sidebar để tạo khối rõ ràng */
-section[data-testid="stSidebar"] div[data-testid="stExpander"] {{
-    background-color: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
+    border: 1px solid #cbd5e1 !important;
     border-radius: 10px !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    margin-bottom: 0.75rem !important;
+    background-color: #ffffff !important;
+    transition: all 0.2s ease;
 }}
 
-/* =========================================================================
-   THIẾT KẾ KHU VỰC NỘI DUNG CHÍNH (MAIN DASHBOARD)
-   ========================================================================= */
-.card-container {{
-    background: rgba(255, 255, 255, 0.9); 
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    border-radius: 16px;
-    padding: 2.2rem;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03);
-    margin-bottom: 1.5rem;
+.stSelectbox div[data-baseweb="select"]:focus-within {{
+    border-color: #4ade80 !important;
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.15) !important;
+}}
+
+/* Tinh chỉnh thiết kế toàn bộ hệ thống Slider (Thanh trượt) sang tông màu chủ đạo */
+div[data-testid="stSlider"] [data-testid="stSliderTickBar"] {{
+    background-color: #e2e8f0 !important;
+}}
+
+/* Màu thanh trượt đã chọn */
+div[data-testid="stSlider"] div[role="slider"] {{
+    background-color: #0ea5e9 !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 2px 6px rgba(14, 165, 233, 0.3) !important;
+}}
+
+/* Màu vệt chạy của thanh trượt */
+div[data-testid="stSlider"] div[data-track="true"] > div {{
+    background: #0ea5e9 !important;
+}}
+
+h1 {{
+    color: #1e293b !important; 
+    font-weight: 800 !important;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -1px;
+    margin-bottom: 0.5rem;
 }}
 
 .card-title-h2 {{
-    color: #0f172a !important; 
-    font-weight: 800 !important;
-    font-size: 1.4rem;
+    color: #0ea5e9 !important; 
+    font-weight: 700 !important;
+    font-family: 'Inter', sans-serif;
     letter-spacing: -0.5px;
-    margin-bottom: 1.2rem !important;
+    font-size: 1.5rem;
+    margin-top: 0px !important;
+    margin-bottom: 0.5rem !important;
 }}
 
+/* Nút bấm đổi sang màu Gradient Xanh Mint - Xanh Biển Pastel nhẹ nhàng */
 .stButton > button {{
-    background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #4ade80, #0ea5e9);
     color: #ffffff !important;
-    border-radius: 10px;
-    padding: 0.75rem 2rem;
-    font-weight: 700;
-    font-size: 1rem;
+    border-radius: 8px;
+    padding: 0.7rem 2rem;
+    font-weight: 600;
     border: none;
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
-    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+    transition: all 0.3s ease;
     width: 100%;
 }}
 
 .stButton > button:hover {{
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
-    background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%);
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.25);
+    background: linear-gradient(135deg, #22c55e, #0284c7);
 }}
 
 .stTabs [data-baseweb="tab-list"] {{
-    gap: 8px;
-    background-color: rgba(226, 232, 240, 0.6);
-    padding: 6px;
+    gap: 12px;
+    background-color: rgba(241, 245, 249, 0.6);
+    padding: 8px;
     border-radius: 12px;
 }}
 
 .stTabs [data-baseweb="tab"] {{
-    height: 42px;
+    height: 45px;
+    white-space: pre;
+    background-color: transparent;
     border-radius: 8px;
-    color: #475569;
+    color: #64748b;
     font-weight: 600 !important;
-    font-size: 0.9rem;
-    padding: 0px 20px;
+    font-size: 0.95rem;
+    padding: 0px 24px;
+    transition: all 0.2s ease;
+}}
+
+.stTabs [data-baseweb="tab"]:hover {{
+    color: #0ea5e9;
+    background-color: rgba(255, 255, 255, 0.5);
 }}
 
 .stTabs [aria-selected="true"] {{
     background-color: #ffffff !important;
-    color: #0284c7 !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+    color: #0ea5e9 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+}}
+
+div[data-testid="stMetricValue"] {{
+    font-weight: 700 !important;
+    color: #0ea5e9 !important;
 }}
 
 div[data-testid="stSuccessMessage"], div[data-testid="stErrorMessage"] {{
-    border-radius: 12px;
-    padding: 1.5rem;
-    font-size: 1.05rem;
-    font-weight: 600;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    padding: 1rem;
+    font-weight: 500;
+}}
+
+div[data-testid="stSuccessMessage"] {{
+    background-color: #f0fdf4 !important; 
+    border-color: #dcfce7 !important;
+    color: #166534 !important;
+}}
+
+div[data-testid="stErrorMessage"] {{
+    background-color: #fef2f2 !important; 
+    border-color: #fee2e2 !important;
+    color: #991b1b !important;
+}}
+
+.card-container {{
+    background: rgba(255, 255, 255, 0.92); 
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+    margin-bottom: 1.5rem;
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -166,104 +226,61 @@ def load_real_data():
             "Purchase Amount (USD)": [55, 80, 45, 120, 30, 95, 70, 110, 65, 40],
             "Promo Code Used": ["Yes", "No", "Yes", "No", "No", "Yes", "No", "Yes", "No", "Yes"],
             "Review Rating": [4.5, 3.8, 4.0, 4.2, 3.5, 4.8, 3.9, 4.7, 4.1, 4.4],
-            "Location": ["California", "New York", "Texas", "California", "Florida", "Maine", "Oregon", "Texas", "New York", "California"],
-            "Item Purchased": ["Blouse", "Sweater", "Jeans", "Sandals", "Shirt", "Shoes", "Blouse", "Sweater", "Jeans", "Sandals"],
-            "Size": ["M", "L", "S", "XL", "M", "L", "S", "M", "L", "XL"],
-            "Color": ["Black", "White", "Blue", "Gray", "Black", "White", "Blue", "Gray", "Black", "White"],
-            "Season": ["Spring", "Summer", "Fall", "Winter", "Spring", "Summer", "Fall", "Winter", "Spring", "Summer"],
-            "Subscription Status": ["Yes", "No", "Yes", "No", "No", "Yes", "No", "Yes", "No", "Yes"],
-            "Shipping Type": ["Standard", "Express", "Standard", "Express", "Standard", "Express", "Standard", "Express", "Standard", "Express"],
-            "Discount Applied": ["Yes", "No", "Yes", "No", "No", "Yes", "No", "Yes", "No", "Yes"],
-            "Previous Purchases": [12, 5, 22, 1, 8, 15, 3, 19, 6, 11],
-            "Payment Method": ["Credit Card", "PayPal", "Credit Card", "PayPal", "Credit Card", "PayPal", "Credit Card", "PayPal", "Credit Card", "PayPal"],
-            "Frequency of Purchases": ["Monthly", "Weekly", "Monthly", "Weekly", "Monthly", "Weekly", "Monthly", "Weekly", "Monthly", "Weekly"]
+            "Location": ["California", "New York", "Texas", "California", "Florida", "Maine", "Oregon", "Texas", "New York", "California"]
         })
 
 model, le = load_models()
 df_real = load_real_data()
 df_real = df_real.drop(columns=["Customer ID"], errors="ignore")
 
-st.markdown("<h1 style='text-align: center; margin-top: 1rem;'>🛍️ Shopping Trends & Predictive Intelligence</h1>", unsafe_allow_html=True)
-st.markdown("<p style='color: #64748b; font-size: 1.1rem; margin-top: -0.5rem; margin-bottom: 2.5rem; text-align: center;'>Advanced Machine Learning Pipeline & Consumer Behavior Dashboard</p>", unsafe_allow_html=True)
+st.markdown("# 🛍️ Shopping Trends & Predictive Intelligence")
+st.markdown("<p style='color: #64748b; font-size: 1.1rem; margin-top: -0.5rem; margin-bottom: 1.5rem;'>Advanced Machine Learning Model Evaluation & Consumer Insights Hub</p>", unsafe_allow_html=True)
 
-# SIDEBAR: Các cụm tính năng được đẩy độ tương phản chữ lên cao nhất
-st.sidebar.header("🕹️ Control Panel")
+st.sidebar.header("📝 Customer Attributes")
+age = st.sidebar.slider("Age", 18, 70, 25)
+gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
+category = st.sidebar.selectbox("Category", ["Clothing", "Footwear", "Accessories", "Outerwear"])
+item = st.sidebar.selectbox("Item Purchased", ["Blouse", "Sweater", "Jeans", "Sandals", "Shirt", "Shoes"])
+purchase_amount = st.sidebar.slider("Purchase Amount (USD)", 20, 100, 50)
+discount = st.sidebar.selectbox("Discount Applied", ["Yes", "No"])
+location = st.sidebar.selectbox("Location", ["Kentucky", "Maine", "Massachusetts", "Rhode Island", "Oregon", "California", "Texas", "New York"])
+size = st.sidebar.selectbox("Size", ["S", "M", "L", "XL"])
+color = st.sidebar.selectbox("Color", ["Gray", "Maroon", "Turquoise", "Black", "White", "Blue"])
+season = st.sidebar.selectbox("Season", ["Spring", "Summer", "Fall", "Winter"])
+review = st.sidebar.slider("Review Rating", 1.0, 5.0, 3.5)
+subscription_status = st.sidebar.selectbox("Subscription Status", ["Yes", "No"])
+shipping_type = st.sidebar.selectbox("Shipping Type", ["Standard", "Express", "Free Shipping", "Next Day Air"])
+previous_purchases = st.sidebar.slider("Previous Purchases", 0, 50, 14)
+payment_method = st.sidebar.selectbox("Payment Method", ["Credit Card", "Cash", "PayPal", "Venmo"])
+frequency_of_purchases = st.sidebar.selectbox("Frequency of Purchases", ["Weekly", "Monthly", "Quarterly", "Annually", "Fortnightly"])
 
-with st.sidebar.expander("👤 1. Demographics Attribute", expanded=True):
-    age = st.slider("Age", 18, 70, 28)
-    gender = st.selectbox("Gender", ["Male", "Female"])
-    location = st.selectbox("Location", sorted(df_real["Location"].unique() if "Location" in df_real.columns else ["California", "New York", "Texas"]))
+age_group = pd.cut([age], bins=[18, 35, 55, 70, float("inf")], labels=["19-35", "36-55", "55-70", "71+"])[0]
 
-with st.sidebar.expander("📦 2. Product & Cart Basket", expanded=True):
-    category = st.selectbox("Category", sorted(df_real["Category"].unique() if "Category" in df_real.columns else ["Clothing", "Footwear"]))
-    item = st.selectbox("Item Purchased", sorted(df_real["Item Purchased"].unique() if "Item Purchased" in df_real.columns else ["Blouse", "Sweater"]))
-    size = st.selectbox("Size", ["S", "M", "L", "XL"])
-    color = st.selectbox("Color", sorted(df_real["Color"].unique() if "Color" in df_real.columns else ["Black", "White"]))
-    season = st.selectbox("Season", ["Spring", "Summer", "Fall", "Winter"])
+input_data = pd.DataFrame([{
+    "Age": age, "AgeGroup": age_group, "Gender": gender, "Item Purchased": item,
+    "Category": category, "Purchase Amount (USD)": purchase_amount, "Discount Applied": discount,
+    "Location": location, "Size": size, "Color": color, "Season": season, "Review Rating": review,
+    "Subscription Status": subscription_status, "Shipping Type": shipping_type, 
+    "Previous Purchases": previous_purchases, "Payment Method": payment_method,
+    "Frequency of Purchases": frequency_of_purchases
+}])
 
-with st.sidebar.expander("💳 3. Transaction & Behavioral History", expanded=True):
-    purchase_amount = st.slider("Purchase Amount (USD)", 10, 200, 65)
-    previous_purchases = st.slider("Previous Purchases Count", 0, 50, 10)
-    review = st.slider("Review Rating Tracker", 1.0, 5.0, 4.2)
-    discount = st.selectbox("Discount Applied", ["Yes", "No"])
-    subscription_status = st.selectbox("Subscription Status", ["Yes", "No"])
-    shipping_type = st.selectbox("Shipping Type", sorted(df_real["Shipping Type"].unique() if "Shipping Type" in df_real.columns else ["Standard", "Express"]))
-    payment_method = st.selectbox("Payment Method", sorted(df_real["Payment Method"].unique() if "Payment Method" in df_real.columns else ["Credit Card", "PayPal"]))
-    frequency_of_purchases = st.selectbox("Frequency of Purchases", sorted(df_real["Frequency of Purchases"].unique() if "Frequency of Purchases" in df_real.columns else ["Monthly", "Weekly"]))
-
-# Cơ chế xử lý DataFrame chuẩn hóa, chống sập cho KNN (isnan error fix)
-input_data = df_real.head(1).copy()
-input_data.at[0, "Age"] = int(age)
-input_data.at[0, "Gender"] = str(gender)
-input_data.at[0, "Item Purchased"] = str(item)
-input_data.at[0, "Category"] = str(category)
-input_data.at[0, "Purchase Amount (USD)"] = float(purchase_amount)
-input_data.at[0, "Location"] = str(location)
-input_data.at[0, "Size"] = str(size)
-input_data.at[0, "Color"] = str(color)
-input_data.at[0, "Season"] = str(season)
-input_data.at[0, "Review Rating"] = float(review)
-input_data.at[0, "Subscription Status"] = str(subscription_status)
-input_data.at[0, "Shipping Type"] = str(shipping_type)
-input_data.at[0, "Discount Applied"] = str(discount)
-input_data.at[0, "Previous Purchases"] = int(previous_purchases)
-input_data.at[0, "Payment Method"] = str(payment_method)
-input_data.at[0, "Frequency of Purchases"] = str(frequency_of_purchases)
-
-if "Promo Code Used" in input_data.columns:
-    input_data = input_data.drop(columns=["Promo Code Used"])
-
-feature_order = [
-    "Age", "Gender", "Item Purchased", "Category", "Purchase Amount (USD)", 
-    "Location", "Size", "Color", "Season", "Review Rating", 
-    "Subscription Status", "Shipping Type", "Discount Applied", 
-    "Previous Purchases", "Payment Method", "Frequency of Purchases"
-]
-input_data = input_data[feature_order]
+input_data = input_data.reindex(columns=model.feature_names_in_, fill_value=0)
 
 tab1, tab2, tab3 = st.tabs([
-    "🎯 AI Predictive Inference", 
-    "📊 Consumer Analytics Market", 
-    "📋 Structural Data Registry"
+    "🎯 Predict Promo Code", 
+    "📊 Data Visualizations", 
+    "📋 Raw Data Explorer"
 ])
 
 with tab1:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown('<div class="card-title-h2">📊 Live Session Summary</div>', unsafe_allow_html=True)
-    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-    kpi1.metric("Customer Segment", f"{age}yo {gender}")
-    kpi2.metric("Target Basket", f"{category}")
-    kpi3.metric("Ticket Size", f"${purchase_amount}")
-    kpi4.metric("Loyalty Score", f"{previous_purchases} Orders")
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown('<div class="card-title-h2">🎯 Predictive Intelligence Engine</div>', unsafe_allow_html=True)
-    st.markdown("<p style='color: #64748b; margin-bottom: 1.5rem;'>The K-Nearest Neighbors mathematical algorithm evaluates historical similarities to estimate targeted coupon utilization probabilities.</p>", unsafe_allow_html=True)
+    st.markdown('<div class="card-title-h2">🎯 AI Promo Code Prediction Inference</div>', unsafe_allow_html=True)
+    st.markdown("<p style='color: #64748b;'>Configure customer attributes in the sidebar panel and click below to process predictive analytics.</p>", unsafe_allow_html=True)
     
-    col_btn_l, col_btn_c, col_btn_r = st.columns([1.5, 1, 1.5])
-    with col_btn_c:
-        btn_predict = st.button("🚀 Run AI Inference")
+    col_b1, col_b2, col_b3 = st.columns([1.2, 1, 1.2])
+    with col_b2:
+        btn_predict = st.button("🚀 Execute Prediction Model")
 
     if btn_predict:
         st.markdown("<br>", unsafe_allow_html=True)
@@ -271,38 +288,38 @@ with tab1:
         result = le.inverse_transform(prediction)[0]
 
         if result == "Yes" or result == 1:
-            st.success("🎉 **HIGH PROPENSITY DETECTED:** This consumer model predicts a strong likelihood of utilizing promotional vouchers!")
+            st.success("🎉 ANALYSIS RESULT: THIS CUSTOMER IS HIGHLY LIKELY TO USE A PROMO CODE!")
             st.balloons()
         else:
-            st.error("❌ **LOW PROPENSITY DETECTED:** The system suggests this customer profile is highly likely to ignore or bypass promotional code application.")
+            st.error("❌ ANALYSIS RESULT: THIS CUSTOMER IS UNLIKELY TO USE A PROMO CODE.")
 
         st.markdown("<br>", unsafe_allow_html=True)
-        with st.expander("🛠️ View Matrix Mathematical Engineering Inputs"):
-            st.dataframe(input_data, use_container_width=True)
+        with st.expander("🔍 Processed Structural Vector Inputs"):
+            st.dataframe(input_data)
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tab2:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown('<div class="card-title-h2">📊 Business Intelligence Insights Market</div>', unsafe_allow_html=True)
-    st.markdown("<p style='color: #64748b; margin-bottom: 2rem;'>Interactive visualization clusters based on historical multi-channel enterprise telemetry datasets.</p>", unsafe_allow_html=True)
+    st.markdown('<div class="card-title-h2">📊 Customer Insights & Data Visualizations</div>', unsafe_allow_html=True)
+    st.markdown("<p style='color: #64748b; margin-bottom: 2rem;'>Detailed exploratory analysis over five distinct high-aesthetic graphical styles.</p>", unsafe_allow_html=True)
     
     promo_col = "Promo Code Used" if "Promo Code Used" in df_real.columns else df_real.columns[-1]
-    custom_colors = {"Yes": "#38bdf8", "No": "#cbd5e1", 1: "#38bdf8", 0: "#cbd5e1"}
+    
+    custom_colors = {"Yes": "#86efac", "No": "#fca5a5", 1: "#86efac", 0: "#fca5a5"}
     
     g_col1, g_col2 = st.columns(2)
     
     with g_col1:
-        fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="group",
-                            title="Voucher Conversion Ratios Segmented by Gender Base",
+        fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="stack",
+                            title="1. Promo Code Count Distribution by Gender",
                             color_discrete_map=custom_colors)
-        # Đã FIX LỖI: Xóa hoàn toàn barcode=None để biểu đồ hoạt động mượt mà
-        fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+        fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Gender", yaxis_title="Count")
         st.plotly_chart(fig1, use_container_width=True)
         
         if "Category" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
-            fig3 = px.pie(df_real, names="Category", values="Purchase Amount (USD)", hole=0.5,
-                          title="Revenue Stream Distribution Across Categories",
-                          color_discrete_sequence=px.colors.sequential.Blues)
+            fig3 = px.pie(df_real, names="Category", values="Purchase Amount (USD)", hole=0.4,
+                          title="3. Revenue Contribution Share by Product Category",
+                          color_discrete_sequence=px.colors.sequential.Mint)
             fig3.update_layout(paper_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig3, use_container_width=True)
 
@@ -310,31 +327,31 @@ with tab2:
         if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
             df_line = df_real.groupby("Age", as_index=False)["Purchase Amount (USD)"].mean()
             fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)", markers=True,
-                           title="Average Lifetime Order Value Fluctuations by Age Distribution",
-                           color_discrete_sequence=["#2563eb"])
-            fig2.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+                           title="2. Average Purchase Amount Trend by Age",
+                           color_discrete_sequence=["#38bdf8"])
+            fig2.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Age", yaxis_title="Avg Amount (USD)")
             st.plotly_chart(fig2, use_container_width=True)
 
         if "Location" in df_real.columns and "Review Rating" in df_real.columns:
             fig4 = px.box(df_real, x="Location", y="Review Rating", color=promo_col,
-                          title="Regional Feedback Rating Dispersions Mapping",
+                          title="4. Customer Review Rating Distribution by Location",
                           color_discrete_map=custom_colors)
-            fig4.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+            fig4.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Location", yaxis_title="Review Rating")
             st.plotly_chart(fig4, use_container_width=True)
             
     st.markdown("---")
     if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns and "Review Rating" in df_real.columns:
         fig5 = px.scatter(df_real, x="Age", y="Purchase Amount (USD)", color=promo_col,
-                          size="Review Rating", size_max=12,
-                          title="Multidimensional Core Correlation Matrix (Age x Revenue x Satisfaction)",
+                          size="Review Rating", size_max=15,
+                          title="5. Multidimensional Correlation: Age vs Amount vs Rating",
                           color_discrete_map=custom_colors)
-        fig5.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+        fig5.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Age", yaxis_title="Purchase Amount (USD)")
         st.plotly_chart(fig5, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tab3:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown('<div class="card-title-h2">📋 Data Registry Auditing</div>', unsafe_allow_html=True)
-    st.markdown("<p style='color: #64748b; margin-bottom: 1.5rem;'>Auditable analytical snapshot exposing production records embedded into the core engine memory.</p>", unsafe_allow_html=True)
-    st.dataframe(df_real.head(15), use_container_width=True)
+    st.markdown('<div class="card-title-h2">📋 Comprehensive Enterprise Database Registry (Top 10 Rows)</div>', unsafe_allow_html=True)
+    st.markdown("<p style='color: #64748b; margin-bottom: 1.5rem;'>Interactive relational tabular view containing top 10 rows of real available customer transaction properties.</p>", unsafe_allow_html=True)
+    st.dataframe(df_real.head(10), use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
