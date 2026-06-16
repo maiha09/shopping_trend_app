@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import joblib
 import plotly.express as px
-import base64
-import os
 
 st.set_page_config(
     page_title="Promo Code Prediction Dashboard",
@@ -11,38 +9,13 @@ st.set_page_config(
     layout="wide"
 )
 
-# Hàm mã hóa ảnh cục bộ sang Base64 để nhúng vào CSS làm hình nền ổn định
-def get_base64_image(image_path):
-    if os.path.exists(image_path):
-        with open(image_path, "rb") as img_file:
-            return base64.b64encode(img_file.read()).decode()
-    return ""
-
-img_base64 = get_base64_image("images.jpg")
-
 st.markdown(f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-/* Tạo lớp nền mờ sử dụng file ảnh images.jpg */
-.stApp::before {{
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-image: url("data:image/jpeg;base64,{img_base64}");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: 0.06; /* Giảm nhẹ độ mờ của ảnh nền xuống 6% để màu dịu hơn */
-    z-index: -1;
-}}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&display=swap');
 
 .stApp {{
-    background: transparent;
-    color: #334155; /* Màu chữ xám than dịu nhẹ, không đen gắt */
+    background: linear-gradient(135deg, #f0fdf4 0%, #f0f9ff 100%) !important;
+    color: #334155; 
     font-family: 'Inter', sans-serif;
 }}
 
@@ -51,13 +24,55 @@ st.markdown(f"""
 }}
 
 section[data-testid="stSidebar"] {{
-    background: rgba(255, 255, 255, 0.6) !important;
-    backdrop-filter: blur(20px);
-    border-right: 1px solid rgba(226, 232, 240, 0.8);
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(25px);
+    border-right: 1px solid rgba(226, 232, 240, 0.9);
+    padding: 1.5rem 0.5rem;
+}}
+
+section[data-testid="stSidebar"] .stMarkdown h2 {{
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px;
+    border-bottom: 2px solid #4ade80;
+    padding-bottom: 8px;
+    margin-bottom: 1.5rem !important;
+}}
+
+div[data-testid="stWidgetLabel"] p {{
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    font-size: 0.95rem !important;
+}}
+
+.stSelectbox div[data-baseweb="select"] {{
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 10px !important;
+    background-color: #ffffff !important;
+    transition: all 0.2s ease;
+}}
+
+.stSelectbox div[data-baseweb="select"]:focus-within {{
+    border-color: #4ade80 !important;
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.15) !important;
+}}
+
+div[data-testid="stSlider"] [data-testid="stSliderTickBar"] {{
+    background-color: #e2e8f0 !important;
+}}
+
+div[data-testid="stSlider"] div[role="slider"] {{
+    background-color: #0ea5e9 !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 2px 6px rgba(14, 165, 233, 0.3) !important;
+}}
+
+div[data-testid="stSlider"] div[data-track="true"] > div {{
+    background: #0ea5e9 !important;
 }}
 
 h1 {{
-    color: #1e293b !important; /* Hạ tông chữ tiêu đề chính xuống xám đậm */
+    color: #1e293b !important; 
     font-weight: 800 !important;
     font-family: 'Inter', sans-serif;
     letter-spacing: -1px;
@@ -65,7 +80,7 @@ h1 {{
 }}
 
 .card-title-h2 {{
-    color: #0ea5e9 !important; /* Tiêu đề thẻ chuyển sang màu xanh biển dịu */
+    color: #0ea5e9 !important; 
     font-weight: 700 !important;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.5px;
@@ -74,17 +89,6 @@ h1 {{
     margin-bottom: 0.5rem !important;
 }}
 
-div[data-testid="stWidgetLabel"] p {{
-    font-weight: 600 !important;
-    color: #475569 !important;
-    font-size: 0.95rem !important;
-}}
-
-input, .stSelectbox, .stSlider {{
-    border-radius: 8px !important;
-}}
-
-/* Nút bấm đổi sang màu Gradient Xanh Mint - Xanh Biển Pastel nhẹ nhàng */
 .stButton > button {{
     background: linear-gradient(135deg, #4ade80, #0ea5e9);
     color: #ffffff !important;
@@ -138,7 +142,6 @@ div[data-testid="stMetricValue"] {{
     color: #0ea5e9 !important;
 }}
 
-/* Thông báo kết quả dùng tông màu nhạt pastel dịu mắt */
 div[data-testid="stSuccessMessage"], div[data-testid="stErrorMessage"] {{
     border-radius: 10px;
     border: 1px solid transparent;
@@ -147,19 +150,19 @@ div[data-testid="stSuccessMessage"], div[data-testid="stErrorMessage"] {{
 }}
 
 div[data-testid="stSuccessMessage"] {{
-    background-color: #f0fdf4 !important; /* Xanh lá siêu nhạt */
+    background-color: #f0fdf4 !important; 
     border-color: #dcfce7 !important;
     color: #166534 !important;
 }}
 
 div[data-testid="stErrorMessage"] {{
-    background-color: #fef2f2 !important; /* Đỏ hồng siêu nhạt */
+    background-color: #fef2f2 !important; 
     border-color: #fee2e2 !important;
     color: #991b1b !important;
 }}
 
 .card-container {{
-    background: rgba(255, 255, 255, 0.92); /* Tăng nhẹ độ đặc nền trắng để chữ hiển thị tinh tế, rõ ràng hơn */
+    background: rgba(255, 255, 255, 0.92); 
     backdrop-filter: blur(12px);
     border: 1px solid rgba(226, 232, 240, 0.8);
     border-radius: 16px;
@@ -268,7 +271,6 @@ with tab2:
     
     promo_col = "Promo Code Used" if "Promo Code Used" in df_real.columns else df_real.columns[-1]
     
-    # THAY ĐỔI TẠI ĐÂY: Sử dụng màu Xanh lá xám nhạt (Sage) và Hồng đất nhạt (Soft Rose) để biểu đồ cực dịu mắt
     custom_colors = {"Yes": "#86efac", "No": "#fca5a5", 1: "#86efac", 0: "#fca5a5"}
     
     g_col1, g_col2 = st.columns(2)
@@ -283,7 +285,7 @@ with tab2:
         if "Category" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
             fig3 = px.pie(df_real, names="Category", values="Purchase Amount (USD)", hole=0.4,
                           title="3. Revenue Contribution Share by Product Category",
-                          color_discrete_sequence=px.colors.sequential.Mint) # Chuyển biểu đồ tròn sang dải màu Mint bạc hà nhạt
+                          color_discrete_sequence=px.colors.sequential.Mint)
             fig3.update_layout(paper_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig3, use_container_width=True)
 
@@ -292,7 +294,7 @@ with tab2:
             df_line = df_real.groupby("Age", as_index=False)["Purchase Amount (USD)"].mean()
             fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)", markers=True,
                            title="2. Average Purchase Amount Trend by Age",
-                           color_discrete_sequence=["#38bdf8"]) # Màu đường kẻ đổi thành xanh Sky nhạt
+                           color_discrete_sequence=["#38bdf8"])
             fig2.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Age", yaxis_title="Avg Amount (USD)")
             st.plotly_chart(fig2, use_container_width=True)
 
