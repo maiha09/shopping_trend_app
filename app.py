@@ -18,12 +18,11 @@ def get_base64_image(image_path):
             return base64.b64encode(img_file.read()).decode()
     return ""
 
-
 img_base64 = get_base64_image("images.jpg")
 
 st.markdown(f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* Tạo lớp nền mờ sử dụng file ảnh images.jpg */
 .stApp::before {{
@@ -158,7 +157,6 @@ div[data-testid="stErrorMessage"] {{
 }}
 
 .card-container {{
-    /* Tăng độ đậm của khối chứa nội dung (0.9) kết hợp kính mờ để chữ đè lên ảnh nền rõ ràng nhất */
     background: rgba(255, 255, 255, 0.9); 
     backdrop-filter: blur(12px);
     border: 1px solid rgba(226, 232, 240, 0.8);
@@ -267,12 +265,16 @@ with tab2:
     st.markdown("<p style='color: #64748b; margin-bottom: 2rem;'>Detailed exploratory analysis over five distinct high-aesthetic graphical styles.</p>", unsafe_allow_html=True)
     
     promo_col = "Promo Code Used" if "Promo Code Used" in df_real.columns else df_real.columns[-1]
+    
+    # Định nghĩa cấu hình màu sắc tương phản cố định cho thuộc tính Promo Code Used
+    custom_colors = {"Yes": "#22c55e", "No": "#ef4444", 1: "#22c55e", 0: "#ef4444"}
+    
     g_col1, g_col2 = st.columns(2)
     
     with g_col1:
         fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="stack",
                             title="1. Promo Code Count Distribution by Gender",
-                            color_discrete_sequence=["#6366f1", "#cbd5e1"])
+                            color_discrete_map=custom_colors)
         fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Gender", yaxis_title="Count")
         st.plotly_chart(fig1, use_container_width=True)
         
@@ -295,7 +297,7 @@ with tab2:
         if "Location" in df_real.columns and "Review Rating" in df_real.columns:
             fig4 = px.box(df_real, x="Location", y="Review Rating", color=promo_col,
                           title="4. Customer Review Rating Distribution by Location",
-                          color_discrete_sequence=["#6366f1", "#94a3b8"])
+                          color_discrete_map=custom_colors)
             fig4.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Location", yaxis_title="Review Rating")
             st.plotly_chart(fig4, use_container_width=True)
             
@@ -304,7 +306,7 @@ with tab2:
         fig5 = px.scatter(df_real, x="Age", y="Purchase Amount (USD)", color=promo_col,
                           size="Review Rating", size_max=15,
                           title="5. Multidimensional Correlation: Age vs Amount vs Rating",
-                          color_discrete_sequence=px.colors.sequential.Purples_r)
+                          color_discrete_map=custom_colors)
         fig5.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Age", yaxis_title="Purchase Amount (USD)")
         st.plotly_chart(fig5, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
