@@ -10,15 +10,13 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Hệ thống CSS nâng cao tối ưu độ tương phản và hiển thị rõ nét
 st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-/* Định dạng nền ứng dụng với độ tương phản cao */
 .stApp {{
     background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
-    color: #0f172a !important; /* Chữ chính màu tối đậm, không bị chìm */
+    color: #0f172a !important;
     font-family: 'Inter', sans-serif;
 }}
 
@@ -26,14 +24,12 @@ st.markdown(f"""
     padding: 2rem 4rem !important;
 }}
 
-/* Thiết kế thanh điều hướng Sidebar */
 section[data-testid="stSidebar"] {{
     background-color: #ffffff !important;
     border-right: 1px solid #cbd5e1;
     box-shadow: 4px 0 20px rgba(15, 23, 42, 0.05);
 }}
 
-/* Màu chữ tiêu đề Sidebar */
 section[data-testid="stSidebar"] .stMarkdown h2, 
 section[data-testid="stSidebar"] h1, 
 section[data-testid="stSidebar"] p,
@@ -42,10 +38,9 @@ section[data-testid="stSidebar"] span {{
     font-weight: 700 !important;
 }}
 
-/* Tinh chỉnh nhãn điều khiển input rõ nét */
 div[data-testid="stWidgetLabel"] p {{
     font-weight: 600 !important;
-    color: #1e293b !important; /* Màu chữ tiêu đề input rõ ràng */
+    color: #1e293b !important;
     font-size: 0.95rem !important;
 }}
 
@@ -56,7 +51,6 @@ div[data-testid="stWidgetLabel"] p {{
     color: #0f172a !important;
 }}
 
-/* Thiết kế Card Container sáng, đổ bóng mịn, tương phản cao */
 .card-container {{
     background: #ffffff !important; 
     border: 1px solid #cbd5e1;
@@ -78,12 +72,11 @@ div[data-testid="stWidgetLabel"] p {{
 }}
 
 .card-description {{
-    color: #334155 !important; /* Màu chữ mô tả đậm hơn để không bị mờ */
+    color: #334155 !important;
     font-size: 0.95rem;
     margin-bottom: 1.5rem;
 }}
 
-/* Đại tu thiết kế nút bấm */
 .stButton > button {{
     background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%) !important;
     color: #ffffff !important;
@@ -103,7 +96,6 @@ div[data-testid="stWidgetLabel"] p {{
     background: linear-gradient(135deg, #0369a1 0%, #1e40af 100%) !important;
 }}
 
-/* Điều chỉnh thanh điều hướng Tabs tương phản cao */
 .stTabs [data-baseweb="tab-list"] {{
     gap: 8px;
     background-color: #cbd5e1 !important;
@@ -115,7 +107,7 @@ div[data-testid="stWidgetLabel"] p {{
     height: 40px;
     background-color: transparent;
     border-radius: 6px;
-    color: #334155 !important; /* Chữ tab chưa chọn rõ màu */
+    color: #334155 !important;
     font-weight: 600 !important;
     font-size: 0.95rem;
     padding: 0px 20px;
@@ -123,11 +115,10 @@ div[data-testid="stWidgetLabel"] p {{
 
 .stTabs [aria-selected="true"] {{
     background-color: #ffffff !important;
-    color: #1d4ed8 !important; /* Chữ tab được chọn nổi bật hẳn */
+    color: #1d4ed8 !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }}
 
-/* Điều chỉnh màu của Metric */
 div[data-testid="stMetricValue"] {{
     color: #0f172a !important;
     font-weight: 700 !important;
@@ -137,7 +128,6 @@ div[data-testid="stMetricLabel"] p {{
     font-weight: 500 !important;
 }}
 
-/* Khung hiển thị thông báo nghiệp vụ */
 div[data-testid="stSuccessMessage"], div[data-testid="stErrorMessage"] {{
     border-radius: 10px;
     padding: 1.25rem;
@@ -183,11 +173,9 @@ model, le = load_models()
 df_real = load_real_data()
 df_real = df_real.drop(columns=["Customer ID"], errors="ignore")
 
-# Tiêu đề chính căn giữa rõ nét
 st.markdown("<h1 style='text-align: center; color: #0f172a; font-weight: 800; margin-top: 1rem;'>🛍️ Shopping Trends & Predictive Intelligence</h1>", unsafe_allow_html=True)
 st.markdown("<p style='color: #334155; font-size: 1.1rem; font-weight: 500; margin-top: -0.5rem; margin-bottom: 2.5rem; text-align: center;'>Advanced Machine Learning Pipeline & Consumer Behavior Dashboard</p>", unsafe_allow_html=True)
 
-# SIDEBAR: Quy hoạch khoa học với Expander
 st.sidebar.header("🕹️ Control Panel")
 
 with st.sidebar.expander("👤 1. Demographics Attribute", expanded=True):
@@ -212,37 +200,38 @@ with st.sidebar.expander("💳 3. Transaction & Behavioral History", expanded=Tr
     payment_method = st.selectbox("Payment Method", sorted(df_real["Payment Method"].unique() if "Payment Method" in df_real.columns else ["Credit Card", "PayPal"]))
     frequency_of_purchases = st.selectbox("Frequency of Purchases", sorted(df_real["Frequency of Purchases"].unique() if "Frequency of Purchases" in df_real.columns else ["Monthly", "Weekly"]))
 
-# Chuẩn hóa dữ liệu đầu vào cho mô hình
-input_data = df_real.head(1).copy()
-input_data.at[0, "Age"] = int(age)
-input_data.at[0, "Gender"] = str(gender)
-input_data.at[0, "Item Purchased"] = str(item)
-input_data.at[0, "Category"] = str(category)
-input_data.at[0, "Purchase Amount (USD)"] = float(purchase_amount)
-input_data.at[0, "Location"] = str(location)
-input_data.at[0, "Size"] = str(size)
-input_data.at[0, "Color"] = str(color)
-input_data.at[0, "Season"] = str(season)
-input_data.at[0, "Review Rating"] = float(review)
-input_data.at[0, "Subscription Status"] = str(subscription_status)
-input_data.at[0, "Shipping Type"] = str(shipping_type)
-input_data.at[0, "Discount Applied"] = str(discount)
-input_data.at[0, "Previous Purchases"] = int(previous_purchases)
-input_data.at[0, "Payment Method"] = str(payment_method)
-input_data.at[0, "Frequency of Purchases"] = str(frequency_of_purchases)
+input_data = pd.DataFrame(index=[0])
+input_data["Age"] = int(age)
+input_data["Gender"] = str(gender)
+input_data["Item Purchased"] = str(item)
+input_data["Category"] = str(category)
+input_data["Purchase Amount (USD)"] = float(purchase_amount)
+input_data["Location"] = str(location)
+input_data["Size"] = str(size)
+input_data["Color"] = str(color)
+input_data["Season"] = str(season)
+input_data["Review Rating"] = float(review)
+input_data["Subscription Status"] = str(subscription_status)
+input_data["Shipping Type"] = str(shipping_type)
+input_data["Discount Applied"] = str(discount)
+input_data["Previous Purchases"] = int(previous_purchases)
+input_data["Payment Method"] = str(payment_method)
+input_data["Frequency of Purchases"] = str(frequency_of_purchases)
 
-if "Promo Code Used" in input_data.columns:
-    input_data = input_data.drop(columns=["Promo Code Used"])
+if hasattr(model, "feature_names_in_"):
+    expected_features = model.feature_names_in_
+elif hasattr(model, "steps") and hasattr(model.steps[0][1], "feature_names_in_"):
+    expected_features = model.steps[0][1].feature_names_in_
+else:
+    expected_features = [
+        "Age", "Gender", "Item Purchased", "Category", "Purchase Amount (USD)", 
+        "Location", "Size", "Color", "Season", "Review Rating", 
+        "Subscription Status", "Shipping Type", "Discount Applied", 
+        "Previous Purchases", "Payment Method", "Frequency of Purchases"
+    ]
 
-feature_order = [
-    "Age", "Gender", "Item Purchased", "Category", "Purchase Amount (USD)", 
-    "Location", "Size", "Color", "Season", "Review Rating", 
-    "Subscription Status", "Shipping Type", "Discount Applied", 
-    "Previous Purchases", "Payment Method", "Frequency of Purchases"
-]
-input_data = input_data[feature_order]
+input_data = input_data[expected_features]
 
-# Giao diện chính phân chia các Tab độc lập
 tab1, tab2, tab3 = st.tabs([
     "🎯 AI Predictive Inference", 
     "📊 Consumer Analytics Market", 
@@ -250,7 +239,6 @@ tab1, tab2, tab3 = st.tabs([
 ])
 
 with tab1:
-    # Khối KPI tóm lược trạng thái
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="card-title-h2">📊 Live Session Summary</div>', unsafe_allow_html=True)
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
@@ -260,7 +248,6 @@ with tab1:
     kpi4.metric("Loyalty Score", f"{previous_purchases} Orders")
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Khối xử lý dự đoán AI
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="card-title-h2">🎯 Predictive Intelligence Engine</div>', unsafe_allow_html=True)
     st.markdown("<p class='card-description'>The K-Nearest Neighbors mathematical algorithm evaluates historical similarities to estimate targeted coupon utilization probabilities.</p>", unsafe_allow_html=True)
@@ -293,7 +280,6 @@ with tab2:
     promo_col = "Promo Code Used" if "Promo Code Used" in df_real.columns else df_real.columns[-1]
     custom_colors = {"Yes": "#0ea5e9", "No": "#94a3b8", 1: "#0ea5e9", 0: "#94a3b8"}
     
-    # Định hình layout biểu đồ thống nhất chữ tối màu dễ đọc
     plotly_layout_update = dict(
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
