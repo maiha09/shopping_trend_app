@@ -37,12 +37,14 @@ h1 {
     margin-bottom: 0.5rem;
 }
 
-h2, h3 {
+.card-title-h2 {
     color: #1e293b !important;
     font-weight: 700 !important;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.5px;
+    font-size: 1.5rem;
     margin-top: 0px !important;
+    margin-bottom: 0.5rem !important;
 }
 
 div[data-testid="stWidgetLabel"] p {
@@ -206,7 +208,7 @@ tab1, tab2, tab3 = st.tabs([
 
 with tab1:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown("## 🎯 AI Promo Code Prediction Inference")
+    st.markdown('<div class="card-title-h2">🎯 AI Promo Code Prediction Inference</div>', unsafe_allow_html=True)
     st.markdown("<p style='color: #64748b;'>Configure customer attributes in the sidebar panel and click below to process predictive analytics.</p>", unsafe_allow_html=True)
     
     col_b1, col_b2, col_b3 = st.columns([1.2, 1, 1.2])
@@ -231,7 +233,7 @@ with tab1:
 
 with tab2:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown("<h2>📊 Customer Insights & Data Visualizations</h2>")
+    st.markdown('<div class="card-title-h2">📊 Customer Insights & Data Visualizations</div>', unsafe_allow_html=True)
     st.markdown("<p style='color: #64748b; margin-bottom: 2rem;'>Detailed exploratory analysis over five distinct high-aesthetic graphical styles.</p>", unsafe_allow_html=True)
     
     promo_col = "Promo Code Used" if "Promo Code Used" in df_real.columns else df_real.columns[-1]
@@ -279,7 +281,7 @@ with tab2:
 
 with tab3:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown("<h2>📋 Comprehensive Enterprise Database Registry (Top 10 Rows)</h2>")
+    st.markdown('<div class="card-title-h2">📋 Comprehensive Enterprise Database Registry (Top 10 Rows)</div>', unsafe_allow_html=True)
     st.markdown("<p style='color: #64748b; margin-bottom: 1.5rem;'>Interactive relational tabular view containing top 10 rows of real available customer transaction properties.</p>", unsafe_allow_html=True)
     st.dataframe(df_real.head(10), use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
