@@ -14,7 +14,7 @@ st.markdown(f"""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&display=swap');
 
 .stApp {{
-    background: linear-gradient(135deg, #6f6560 0%, #f0f9ff 100%) !important;
+    background: linear-gradient(135deg, #f0fdf4 0%, #f0f9ff 100%) !important;
     color: #334155; 
     font-family: 'Inter', sans-serif;
 }}
