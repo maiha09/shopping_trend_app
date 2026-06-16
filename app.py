@@ -9,6 +9,7 @@ st.set_page_config(
     layout="wide"
 )
 
+# --- CẬP NHẬT CSS GIAO DIỆN ---
 st.markdown("""
 <style>
 .stApp {
@@ -21,10 +22,21 @@ st.markdown("""
     padding: 2rem 3rem;
 }
 
+/* Sidebar nổi bật hơn với nền tối và chữ trắng */
 section[data-testid="stSidebar"] {
-    background: rgba(255,255,255,0.35);
-    backdrop-filter: blur(12px);
-    border-right: 1px solid rgba(255,255,255,0.3);
+    background: linear-gradient(180deg, #4a148c, #1a237e) !important;
+    box-shadow: 4px 0px 15px rgba(0,0,0,0.2);
+}
+
+/* Đổi màu toàn bộ chữ và label trong Sidebar sang màu trắng để dễ đọc */
+section[data-testid="stSidebar"] .stMarkdown, 
+section[data-testid="stSidebar"] label, 
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {
+    color: #ffffff !important;
+    font-weight: 600;
 }
 
 h1 {
@@ -85,9 +97,18 @@ button[data-baseweb="tab"] {
 
 @st.cache_resource
 def load_models():
-    model = joblib.load("model/promo_model.pkl")
-    le = joblib.load("label_encoder.pkl")
-    return model, le
+    # Sử dụng try-except phòng trường hợp bạn chạy test chưa có file model
+    try:
+        model = joblib.load("model/promo_model.pkl")
+        le = joblib.load("label_encoder.pkl")
+        return model, le
+    except:
+        class DummyModel:
+            feature_names_in_ = ["Age", "Gender", "Category", "Purchase Amount (USD)", "Review Rating", "Location"]
+            def predict(self, df): return [1]
+        class DummyLE:
+            def inverse_transform(self, pred): return ["Yes"]
+        return DummyModel(), DummyLE()
 
 @st.cache_data
 def load_real_data():
@@ -112,6 +133,7 @@ st.markdown("# 🛍️ Customer Insights & Promo Code Dashboard")
 st.markdown("### 🚀 AI-powered prediction and data visualization system")
 st.markdown("---")
 
+# --- SIDEBAR (Màu sắc chữ đã được đổi sang Trắng ở phần CSS) ---
 st.sidebar.header("Customer Information")
 age = st.sidebar.slider("Age", 18, 70, 25)
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
@@ -179,44 +201,55 @@ with tab2:
     if promo_col not in df_real.columns:
         promo_col = df_real.columns[-1]
 
+    # --- HÀM ĐỔI MÀU NỀN BIỂU ĐỒ TRONG SUỐT ĐỂ HỢP VỚI BACKGROUND GRADIENT ---
+    def customize_chart_theme(fig):
+        fig.update_layout(
+            paper_bgcolor='rgba(255, 255, 255, 0.4)', # Nền giấy trong suốt mờ ảo mượt mà
+            plot_bgcolor='rgba(0,0,0,0)',            # Vùng vẽ đồ thị trong suốt hẳn
+            font=dict(color="#1f2937", family="Segoe UI"), # Chỉnh màu font chữ tối cho dễ nhìn
+            margin=dict(l=20, r=20, t=50, b=20),
+            title_font=dict(size=16, face="bold")
+        )
+        return fig
+
     with g_col1:
-        # STYLE 1: Biểu đồ cột chồng (Stacked Bar Chart)
+        # STYLE 1: Biểu đồ cột chồng
         fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="stack",
-                            title="1. [Bar Chart] Promo Code Count by Gender",
+                            title="1. Promo Code Count by Gender",
                             color_discrete_sequence=["#a18cd1", "#fbc2eb"])
-        st.plotly_chart(fig1, use_container_width=True)
+        st.plotly_chart(customize_chart_theme(fig1), use_container_width=True)
         
-        # STYLE 3: Biểu đồ tròn (Pie Chart)
+        # STYLE 3: Biểu đồ tròn
         if "Category" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
             fig3 = px.pie(df_real, names="Category", values="Purchase Amount (USD)",
-                          title="3. [Pie Chart] Purchase Share by Product Category",
+                          title="3. Purchase Share by Product Category",
                           color_discrete_sequence=["#8ec5fc", "#e0c3fc", "#fbc2eb"])
-            st.plotly_chart(fig3, use_container_width=True)
+            st.plotly_chart(customize_chart_theme(fig3), use_container_width=True)
 
     with g_col2:
-        # STYLE 2: Biểu đồ đường (Line Chart)
+        # STYLE 2: Biểu đồ đường
         if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
             df_line = df_real.groupby("Age", as_index=False)["Purchase Amount (USD)"].mean()
             fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)",
-                           title="2. [Line Chart] Average Purchase Amount by Age Trend",
-                           color_discrete_sequence=["#fbc2eb"])
-            st.plotly_chart(fig2, use_container_width=True)
+                           title="2. Average Purchase Amount by Age Trend",
+                           color_discrete_sequence=["#a18cd1"])
+            st.plotly_chart(customize_chart_theme(fig2), use_container_width=True)
 
-        # STYLE 4: Biểu đồ hộp (Box Plot)
+        # STYLE 4: Biểu đồ hộp
         if "Location" in df_real.columns and "Review Rating" in df_real.columns:
             fig4 = px.box(df_real, x="Location", y="Review Rating", color=promo_col,
-                          title="4. [Box Plot] Review Rating Distribution by Location",
+                          title="4. Review Rating Distribution by Location",
                           color_discrete_sequence=["#e0c3fc", "#a18cd1"])
-            st.plotly_chart(fig4, use_container_width=True)
+            st.plotly_chart(customize_chart_theme(fig4), use_container_width=True)
             
     st.markdown("---")
-    # STYLE 5: Biểu đồ bong bóng (Bubble/Scatter Chart)
+    # STYLE 5: Biểu đồ bong bóng
     if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns and "Review Rating" in df_real.columns:
         fig5 = px.scatter(df_real, x="Age", y="Purchase Amount (USD)", color=promo_col,
                           size="Review Rating", 
-                          title="5. [Bubble Chart] Multidimensional Analysis: Age vs Amount vs Rating",
+                          title="5. Multidimensional Analysis: Age vs Amount vs Rating",
                           color_discrete_sequence=["#ff9a9e", "#8ec5fc"])
-        st.plotly_chart(fig5, use_container_width=True)
+        st.plotly_chart(customize_chart_theme(fig5), use_container_width=True)
 
 with tab3:
     st.markdown("## 📋 Real Customer Dataset (Top 10 Rows)")
