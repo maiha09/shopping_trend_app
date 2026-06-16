@@ -27,14 +27,13 @@ header[data-testid="stHeader"] {
     padding: 2rem 3rem;
 }
 
-/* THANH ĐIỀU HƯỚNG SIDEBAR: Đồng bộ hoàn toàn với màu nền chính */
+/* THANH ĐIỀU HƯỚNG SIDEBAR */
 section[data-testid="stSidebar"] {
     background: linear-gradient(135deg, #f8f9fa 0%, #e3edff 100%) !important;
     box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.05);
     border-right: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-/* Đổi màu chữ Sidebar sang màu tối để nổi bật trên nền Pastel */
 section[data-testid="stSidebar"] .stMarkdown, 
 section[data-testid="stSidebar"] label, 
 section[data-testid="stSidebar"] p,
@@ -46,7 +45,7 @@ section[data-testid="stSidebar"] span {
     font-weight: 600 !important;
 }
 
-/* CĂN GIỮA TIÊU ĐỀ CHÍNH */
+/* CĂN GIỮA TIÊU ĐỀ */
 h1 {
     color: #1e1b4b !important;
     font-weight: 800;
@@ -54,7 +53,6 @@ h1 {
     text-align: center;
 }
 
-/* CĂN GIỮA TIÊU ĐỀ PHỤ */
 h3 {
     color: #1e3a8a !important;
     font-weight: 700 !important;
@@ -122,6 +120,49 @@ button[data-baseweb="tab"] {
 button[data-baseweb="tab"][aria-selected="true"] {
     color: #1e3a8a !important;
     border-bottom-color: #1e3a8a !important;
+}
+
+/* THIẾT KẾ KHỐI METRIC ĐẸP, NỔI BẬT VÀ PHÙ HỢP NỀN PASTEL */
+.metric-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.custom-metric-card {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(79, 70, 229, 0.15);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    flex: 1;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-metric-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 24px rgba(79, 70, 229, 0.08);
+    border-color: rgba(79, 70, 229, 0.3);
+}
+
+.metric-label {
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #4b5563;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    background: linear-gradient(90deg, #1e3a8a, #4f46e5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -294,11 +335,37 @@ with tab3:
     
     st.dataframe(df_real.head(10), use_container_width=True)
     
+    st.markdown("---")
     st.markdown("### 📊 Quick Summary Metrics")
-    m_col1, m_col2, m_col3 = st.columns(3)
-    m_col1.metric("Total Sample Records", f"{len(df_real)} rows")
     
-    if "Purchase Amount (USD)" in df_real.columns:
-        m_col2.metric("Avg Purchase Amount", f"${df_real['Purchase Amount (USD)'].mean():.2f}")
-    if "Age" in df_real.columns:
-        m_col3.metric("Avg Customer Age", f"{df_real['Age'].mean():.1f} years old")
+    # TÍNH TOÁN CÁC BIẾN CHỈ SỐ
+    total_records = f"{len(df_real)} rows"
+    avg_purchase = f"${df_real['Purchase Amount (USD)'].mean():.2f}" if "Purchase Amount (USD)" in df_real.columns else "N/A"
+    avg_age = f"{df_real['Age'].mean():.1f} years" if "Age" in df_real.columns else "N/A"
+    
+    # HIỂN THỊ DƯỚI DẠNG BẢNG THẺ CHỈ SỐ NỔI BẬT ĐÃ ĐƯỢC CUSTOM CSS TỪ ĐẦU FILE
+    m_col1, m_col2, m_col3 = st.columns(3)
+    
+    with m_col1:
+        st.markdown(f"""
+        <div class="custom-metric-card">
+            <div class="metric-label">Total Sample Records</div>
+            <div class="metric-value">{total_records}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with m_col2:
+        st.markdown(f"""
+        <div class="custom-metric-card">
+            <div class="metric-label">Avg Purchase Amount</div>
+            <div class="metric-value">{avg_purchase}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with m_col3:
+        st.markdown(f"""
+        <div class="custom-metric-card">
+            <div class="metric-label">Avg Customer Age</div>
+            <div class="metric-value">{avg_age}</div>
+        </div>
+        """, unsafe_allow_html=True)
