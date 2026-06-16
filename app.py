@@ -37,12 +37,26 @@ section[data-testid="stSidebar"] {
 section[data-testid="stSidebar"] .stMarkdown, 
 section[data-testid="stSidebar"] label, 
 section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] h1,
 section[data-testid="stSidebar"] h2,
 section[data-testid="stSidebar"] h3,
 section[data-testid="stSidebar"] span {
     color: #111827 !important;
     font-weight: 600 !important;
+}
+
+/* THIẾT KẾ RIÊNG CHO TIÊU ĐỀ SIDEBAR ĐẸP MẮT */
+.sidebar-header {
+    font-size: 1.15rem;
+    font-weight: 800 !important;
+    color: #1e1b4b !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(79, 70, 229, 0.15);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 /* CĂN GIỮA TIÊU ĐỀ */
@@ -122,7 +136,7 @@ button[data-baseweb="tab"][aria-selected="true"] {
     border-bottom-color: #1e3a8a !important;
 }
 
-/* THIẾT KẾ KHỐI METRIC ĐẸP, NỔI BẬT VÀ PHÙ HỢP NỀN PASTEL */
+/* KHỐI METRIC */
 .metric-container {
     display: flex;
     justify-content: space-between;
@@ -200,11 +214,14 @@ def load_real_data():
 model, le = load_models()
 df_real = load_real_data()
 
+# TIÊU ĐỀ ỨNG DỤNG ĐÃ ĐƯỢC CĂN GIỮA TỰ ĐỘNG
 st.markdown("# 🛍️ Customer Insights & Promo Code Dashboard")
 st.markdown("### 🚀 AI-powered prediction and data visualization system")
 st.markdown("---")
 
-st.sidebar.header("Customer Information")
+# ĐÃ CHỈNH SỬA: Thay đổi chữ "Customer Information" mặc định thành khối HTML siêu đẹp
+st.sidebar.markdown('<div class="sidebar-header">📋 Customer Information</div>', unsafe_allow_html=True)
+
 age = st.sidebar.slider("Age", 18, 70, 25)
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
 category = st.sidebar.selectbox("Category", ["Clothing", "Footwear", "Accessories"])
@@ -338,12 +355,10 @@ with tab3:
     st.markdown("---")
     st.markdown("### 📊 Quick Summary Metrics")
     
-    # TÍNH TOÁN CÁC BIẾN CHỈ SỐ
     total_records = f"{len(df_real)} rows"
     avg_purchase = f"${df_real['Purchase Amount (USD)'].mean():.2f}" if "Purchase Amount (USD)" in df_real.columns else "N/A"
     avg_age = f"{df_real['Age'].mean():.1f} years" if "Age" in df_real.columns else "N/A"
     
-    # HIỂN THỊ DƯỚI DẠNG BẢNG THẺ CHỈ SỐ NỔI BẬT ĐÃ ĐƯỢC CUSTOM CSS TỪ ĐẦU FILE
     m_col1, m_col2, m_col3 = st.columns(3)
     
     with m_col1:
