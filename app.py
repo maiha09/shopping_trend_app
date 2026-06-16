@@ -8,7 +8,9 @@ st.set_page_config(
     page_icon="🛍️",
     layout="wide"
 )
-
+header[data-testid="stHeader"] {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
 st.markdown("""
 <style>
 .stApp {
