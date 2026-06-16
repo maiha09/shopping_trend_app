@@ -10,10 +10,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Hệ thống CSS nâng cao chuẩn giao diện Glassmorphism & Enterprise UI
+# Hệ thống CSS nâng cao chuẩn doanh nghiệp - Tập trung làm nổi bật Sidebar
 st.markdown(f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&display=swap');
 
 .stApp {{
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%) !important;
@@ -25,45 +25,67 @@ st.markdown(f"""
     padding: 2rem 5rem !important;
 }}
 
-/* Thiết kế thanh điều hướng Sidebar */
+/* =========================================================================
+   ĐẠI TU SIDEBAR BÊN TRÁI - LÀM CHỮ NỔI BẬT KHÔNG BỊ CHÌM VÀO BACKGROUND
+   ========================================================================= */
 section[data-testid="stSidebar"] {{
-    background: rgba(255, 255, 255, 0.9) !important;
-    backdrop-filter: blur(20px);
-    border-right: 1px solid rgba(226, 232, 240, 0.8);
-    box-shadow: 4px 0 24px rgba(15, 23, 42, 0.03);
+    background: #ffffff !important; /* Đổi sang nền trắng thuần để tăng độ tương phản */
+    border-right: 1px solid #cbd5e1;
+    box-shadow: 4px 0 24px rgba(15, 23, 42, 0.08);
 }}
 
+/* Tiêu đề chính của Sidebar */
 section[data-testid="stSidebar"] .stMarkdown h2 {{
-    color: #0f172a !important;
+    color: #0f172a !important; /* Chữ đen đậm siêu rõ */
     font-weight: 800 !important;
     font-size: 1.3rem !important;
     letter-spacing: -0.5px;
-    border-bottom: 3px solid #38bdf8;
+    border-bottom: 3px solid #0ea5e9;
     padding-bottom: 10px;
     margin-bottom: 1.5rem !important;
 }}
 
-/* Tinh chỉnh nhãn điều khiển input */
+/* Chữ tiêu đề của từng hộp Expander trong Sidebar */
+section[data-testid="stSidebar"] .stMarkdown h3, 
+section[data-testid="stSidebar"] p[data-testid="stWidgetLabel"] p,
+section[data-testid="stSidebar"] span[data-testid="stMarkdownContainer"] p {{
+    color: #0f172a !important; /* Cưỡng ép màu chữ đen đậm nổi bật hẳn lên */
+    font-weight: 700 !important;
+}}
+
+/* Tinh chỉnh nhãn điều khiển input trong Sidebar */
 div[data-testid="stWidgetLabel"] p {{
-    font-weight: 600 !important;
-    color: #334155 !important;
+    font-weight: 700 !important;
+    color: #1e293b !important; /* Màu nhãn input rõ ràng, sắc nét */
     font-size: 0.9rem !important;
 }}
 
+/* Làm nổi bật phần nền và đường viền của các ô nhập liệu Selectbox */
 .stSelectbox div[data-baseweb="select"] {{
-    border: 1px solid #cbd5e1 !important;
+    border: 1px solid #94a3b8 !important; /* Viền đậm hơn */
     border-radius: 8px !important;
-    background-color: #ffffff !important;
+    background-color: #f8fafc !important;
 }}
 
-/* Thiết kế Card Container Cao Cấp */
+/* Nền của các hộp Expander trong Sidebar để tạo khối rõ ràng */
+section[data-testid="stSidebar"] div[data-testid="stExpander"] {{
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    margin-bottom: 0.75rem !important;
+}}
+
+/* =========================================================================
+   THIẾT KẾ KHU VỰC NỘI DUNG CHÍNH (MAIN DASHBOARD)
+   ========================================================================= */
 .card-container {{
-    background: rgba(255, 255, 255, 0.85); 
+    background: rgba(255, 255, 255, 0.9); 
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(226, 232, 240, 0.8);
     border-radius: 16px;
     padding: 2.2rem;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.02), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03);
     margin-bottom: 1.5rem;
 }}
 
@@ -73,12 +95,8 @@ div[data-testid="stWidgetLabel"] p {{
     font-size: 1.4rem;
     letter-spacing: -0.5px;
     margin-bottom: 1.2rem !important;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }}
 
-/* Đại tu thiết kế nút bấm */
 .stButton > button {{
     background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
     color: #ffffff !important;
@@ -88,7 +106,7 @@ div[data-testid="stWidgetLabel"] p {{
     font-size: 1rem;
     border: none;
     box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.25s ease;
     width: 100%;
 }}
 
@@ -98,23 +116,20 @@ div[data-testid="stWidgetLabel"] p {{
     background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%);
 }}
 
-/* Điều chỉnh kiến trúc thanh điều hướng Tabs */
 .stTabs [data-baseweb="tab-list"] {{
     gap: 8px;
-    background-color: rgba(226, 232, 240, 0.5);
+    background-color: rgba(226, 232, 240, 0.6);
     padding: 6px;
     border-radius: 12px;
 }}
 
 .stTabs [data-baseweb="tab"] {{
     height: 42px;
-    background-color: transparent;
     border-radius: 8px;
     color: #475569;
     font-weight: 600 !important;
     font-size: 0.9rem;
     padding: 0px 20px;
-    transition: all 0.2s ease;
 }}
 
 .stTabs [aria-selected="true"] {{
@@ -123,13 +138,11 @@ div[data-testid="stWidgetLabel"] p {{
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }}
 
-/* Khung hiển thị thông báo nghiệp vụ */
 div[data-testid="stSuccessMessage"], div[data-testid="stErrorMessage"] {{
     border-radius: 12px;
     padding: 1.5rem;
     font-size: 1.05rem;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.01);
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -170,11 +183,10 @@ model, le = load_models()
 df_real = load_real_data()
 df_real = df_real.drop(columns=["Customer ID"], errors="ignore")
 
-# Tiêu đề chính căn giữa - Tối giản, thanh lịch
 st.markdown("<h1 style='text-align: center; margin-top: 1rem;'>🛍️ Shopping Trends & Predictive Intelligence</h1>", unsafe_allow_html=True)
 st.markdown("<p style='color: #64748b; font-size: 1.1rem; margin-top: -0.5rem; margin-bottom: 2.5rem; text-align: center;'>Advanced Machine Learning Pipeline & Consumer Behavior Dashboard</p>", unsafe_allow_html=True)
 
-# SIDEBAR: Quy hoạch lại khoa học bằng Expander Accordion
+# SIDEBAR: Các cụm tính năng được đẩy độ tương phản chữ lên cao nhất
 st.sidebar.header("🕹️ Control Panel")
 
 with st.sidebar.expander("👤 1. Demographics Attribute", expanded=True):
@@ -199,7 +211,7 @@ with st.sidebar.expander("💳 3. Transaction & Behavioral History", expanded=Tr
     payment_method = st.selectbox("Payment Method", sorted(df_real["Payment Method"].unique() if "Payment Method" in df_real.columns else ["Credit Card", "PayPal"]))
     frequency_of_purchases = st.selectbox("Frequency of Purchases", sorted(df_real["Frequency of Purchases"].unique() if "Frequency of Purchases" in df_real.columns else ["Monthly", "Weekly"]))
 
-# Cơ chế xử lý dữ liệu chuẩn hóa, chống sập cho thuật toán KNN
+# Cơ chế xử lý DataFrame chuẩn hóa, chống sập cho KNN (isnan error fix)
 input_data = df_real.head(1).copy()
 input_data.at[0, "Age"] = int(age)
 input_data.at[0, "Gender"] = str(gender)
@@ -229,7 +241,6 @@ feature_order = [
 ]
 input_data = input_data[feature_order]
 
-# Giao diện chính phân chia các Tab chức năng độc lập
 tab1, tab2, tab3 = st.tabs([
     "🎯 AI Predictive Inference", 
     "📊 Consumer Analytics Market", 
@@ -237,7 +248,6 @@ tab1, tab2, tab3 = st.tabs([
 ])
 
 with tab1:
-    # Khối KPI tóm lược trạng thái đầu vào hiện tại
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="card-title-h2">📊 Live Session Summary</div>', unsafe_allow_html=True)
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
@@ -247,7 +257,6 @@ with tab1:
     kpi4.metric("Loyalty Score", f"{previous_purchases} Orders")
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Khối lõi xử lý dự đoán trí tuệ nhân tạo
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="card-title-h2">🎯 Predictive Intelligence Engine</div>', unsafe_allow_html=True)
     st.markdown("<p style='color: #64748b; margin-bottom: 1.5rem;'>The K-Nearest Neighbors mathematical algorithm evaluates historical similarities to estimate targeted coupon utilization probabilities.</p>", unsafe_allow_html=True)
@@ -286,7 +295,8 @@ with tab2:
         fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="group",
                             title="Voucher Conversion Ratios Segmented by Gender Base",
                             color_discrete_map=custom_colors)
-        fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', barcode=None)
+        # Đã FIX LỖI: Xóa hoàn toàn barcode=None để biểu đồ hoạt động mượt mà
+        fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig1, use_container_width=True)
         
         if "Category" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
