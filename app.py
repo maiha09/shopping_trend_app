@@ -42,6 +42,7 @@ h2, h3 {
     font-weight: 700 !important;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.5px;
+    margin-top: 0px !important;
 }
 
 div[data-testid="stWidgetLabel"] p {
@@ -130,7 +131,7 @@ div[data-testid="stErrorMessage"] {
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(226, 232, 240, 0.8);
     border-radius: 16px;
-    padding: 2rem;
+    padding: 2.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
     margin-bottom: 1.5rem;
 }
@@ -230,7 +231,7 @@ with tab1:
 
 with tab2:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown("## 📊 Customer Insights & Data Visualizations")
+    st.markdown("<h2>📊 Customer Insights & Data Visualizations</h2>")
     st.markdown("<p style='color: #64748b; margin-bottom: 2rem;'>Detailed exploratory analysis over five distinct high-aesthetic graphical styles.</p>", unsafe_allow_html=True)
     
     promo_col = "Promo Code Used" if "Promo Code Used" in df_real.columns else df_real.columns[-1]
@@ -238,14 +239,14 @@ with tab2:
     
     with g_col1:
         fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="stack",
-                            title="1. Promo Code Count Distribution by Gender",
+                            title="1. [Stacked Bar] Promo Code Count Distribution by Gender",
                             color_discrete_sequence=["#4f46e5", "#cbd5e1"])
         fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Gender", yaxis_title="Count")
         st.plotly_chart(fig1, use_container_width=True)
         
         if "Category" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
             fig3 = px.pie(df_real, names="Category", values="Purchase Amount (USD)", hole=0.4,
-                          title="3. Revenue Contribution Share by Product Category",
+                          title="3. [Donut Chart] Revenue Contribution Share by Product Category",
                           color_discrete_sequence=px.colors.sequential.dense)
             fig3.update_layout(paper_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig3, use_container_width=True)
@@ -254,14 +255,14 @@ with tab2:
         if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
             df_line = df_real.groupby("Age", as_index=False)["Purchase Amount (USD)"].mean()
             fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)", markers=True,
-                           title="2. Average Purchase Amount Trend by Age",
+                           title="2. [Line Chart with Markers] Average Purchase Amount Trend by Age",
                            color_discrete_sequence=["#7c3aed"])
             fig2.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Age", yaxis_title="Avg Amount (USD)")
             st.plotly_chart(fig2, use_container_width=True)
 
         if "Location" in df_real.columns and "Review Rating" in df_real.columns:
             fig4 = px.box(df_real, x="Location", y="Review Rating", color=promo_col,
-                          title="4. Customer Review Rating Distribution by Location",
+                          title="4. [Box Plot] Customer Review Rating Distribution by Location",
                           color_discrete_sequence=["#4f46e5", "#94a3b8"])
             fig4.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Location", yaxis_title="Review Rating")
             st.plotly_chart(fig4, use_container_width=True)
@@ -270,7 +271,7 @@ with tab2:
     if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns and "Review Rating" in df_real.columns:
         fig5 = px.scatter(df_real, x="Age", y="Purchase Amount (USD)", color=promo_col,
                           size="Review Rating", size_max=15,
-                          title="5. Multidimensional Correlation: Age vs Amount vs Rating",
+                          title="5. [Bubble Chart] Multidimensional Correlation: Age vs Amount vs Rating",
                           color_discrete_sequence=["#7c3aed", "#cbd5e1"])
         fig5.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Age", yaxis_title="Purchase Amount (USD)")
         st.plotly_chart(fig5, use_container_width=True)
