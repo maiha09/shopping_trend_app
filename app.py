@@ -199,8 +199,8 @@ model, le = load_models()
 df_real = load_real_data()
 df_real = df_real.drop(columns=["Customer ID"], errors="ignore")
 
-st.markdown("# 🛍️ Shopping Trends & Predictive Intelligence")
-st.markdown("<p style='color: #64748b; font-size: 1.1rem; margin-top: -0.5rem; margin-bottom: 1.5rem;'>Advanced Machine Learning Model Evaluation & Consumer Insights Hub</p>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>🛍️ Shopping Trends & Predictive Intelligence</h1>", unsafe_allow_html=True)
+st.markdown("<p style='color: #64748b; font-size: 1.1rem; margin-top: -0.5rem; margin-bottom: 2rem; text-align: center;'>Advanced Machine Learning Model Evaluation & Consumer Insights Hub</p>", unsafe_allow_html=True)
 
 st.sidebar.header("📝 Customer Attributes")
 age = st.sidebar.slider("Age", 18, 70, 25)
