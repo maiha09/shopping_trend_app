@@ -209,4 +209,4 @@ with tab2:
                       size="Review Rating", hover_data=["Category"] if "Category" in df_real.columns else [],
                       title="5. Correlation: Age vs Purchase Amount vs Promo Code Usage",
                       color_discrete_sequence=["#ff9a9e", "#fecfef"])
-    st.plotly_chart(fig5, use_container_width=
+    st.plotly_chart(fig5, use_container_width=True)
