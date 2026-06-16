@@ -115,4 +115,110 @@ st.markdown("---")
 st.sidebar.header("Customer Information")
 age = st.sidebar.slider("Age", 18, 70, 25)
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
-category = st.sidebar.selectbox("Category",
+category = st.sidebar.selectbox("Category", ["Clothing", "Footwear", "Accessories"])
+item = st.sidebar.selectbox("Item Purchased", ["Blouse", "Sweater", "Jeans", "Shoes", "Shirt"])
+purchase_amount = st.sidebar.slider("Purchase Amount (USD)", 20, 100, 50)
+discount = st.sidebar.selectbox("Discount Applied", ["Yes", "No"])
+location = st.sidebar.selectbox("Location", ["Kentucky", "Maine", "Oregon", "California", "Texas", "New York", "Florida"])
+size = st.sidebar.selectbox("Size", ["S", "M", "L", "XL"])
+color = st.sidebar.selectbox("Color", ["Black", "White", "Blue", "Red", "Green", "Yellow", "Pink", "Purple"])
+season = st.sidebar.selectbox("Season", ["Spring", "Summer", "Fall", "Winter"])
+review = st.sidebar.slider("Review Rating", 1.0, 5.0, 3.0)
+subscription_status = st.sidebar.selectbox("Subscription Status", ["Yes", "No"])
+shipping_type = st.sidebar.selectbox("Shipping Type", ["Standard", "Express", "Free Shipping"])
+previous_purchases = st.sidebar.slider("Previous Purchases", 0, 50, 10)
+payment_method = st.sidebar.selectbox("Payment Method", ["Credit Card", "Cash", "PayPal"])
+frequency_of_purchases = st.sidebar.selectbox("Frequency of Purchases", ["Weekly", "Monthly", "Quarterly", "Annually"])
+
+age_group = pd.cut([age], bins=[18, 35, 55, 70, float("inf")], labels=["19-35", "36-55", "55-70", "71+"])[0]
+
+input_data = pd.DataFrame([{
+    "Age": age, "AgeGroup": age_group, "Gender": gender, "Item Purchased": item,
+    "Category": category, "Purchase Amount (USD)": purchase_amount, "Discount Applied": discount,
+    "Location": location, "Size": size, "Color": color, "Season": season, "Review Rating": review,
+    "Subscription Status": subscription_status, "Shipping Type": shipping_type, 
+    "Previous Purchases": previous_purchases, "Payment Method": payment_method,
+    "Frequency of Purchases": frequency_of_purchases
+}])
+
+input_data = input_data.reindex(columns=model.feature_names_in_, fill_value=0)
+
+tab1, tab2, tab3 = st.tabs([
+    "🎯 Predict Promo Code", 
+    "📊 Data Visualizations", 
+    "📋 Real Dataset Sample"
+])
+
+with tab1:
+    st.markdown("## 🎯 Prediction Result")
+    st.markdown("Vui lòng nhập thông tin khách hàng ở thanh điều hướng bên trái (Sidebar), sau đó nhấn nút dưới đây để dự đoán.")
+    
+    predict_col_1, predict_col_2, predict_col_3 = st.columns([1, 1, 1])
+    with predict_col_2:
+        btn_predict = st.button("🚀 Predict Promo Code Usage")
+
+    if btn_predict:
+        prediction = model.predict(input_data)
+        result = le.inverse_transform(prediction)[0]
+
+        if result == "Yes" or result == 1:
+            st.success("🎉 CUSTOMER WILL USE PROMO CODE")
+            st.balloons()
+        else:
+            st.error("❌ CUSTOMER WILL NOT USE PROMO CODE")
+
+        st.markdown("---")
+        with st.expander("🔍 View Processed Input Data"):
+            st.dataframe(input_data)
+
+with tab2:
+    st.markdown("## 📊 Data Insights & Trends")
+    g_col1, g_col2 = st.columns(2)
+    
+    promo_col = "Promo Code Used"
+    if promo_col not in df_real.columns:
+        promo_col = df_real.columns[-1]
+
+    with g_col1:
+        fig1 = px.histogram(df_real, x="Age", color=promo_col, barmode="group",
+                            title="1. Age Distribution by Promo Code Usage",
+                            color_discrete_sequence=["#a18cd1", "#fbc2eb"])
+        st.plotly_chart(fig1, use_container_width=True)
+        
+        fig3 = px.box(df_real, x="Category", y="Purchase Amount (USD)", color=promo_col,
+                      title="3. Purchase Amount Distribution by Category",
+                      color_discrete_sequence=["#8ec5fc", "#e0c3fc"])
+        st.plotly_chart(fig3, use_container_width=True)
+
+    with g_col2:
+        fig2 = px.histogram(df_real, x="Gender", color=promo_col, barmode="group",
+                            title="2. Promo Code Usage Count by Gender",
+                            color_discrete_sequence=["#fbc2eb", "#8ec5fc"])
+        st.plotly_chart(fig2, use_container_width=True)
+
+        if "Location" in df_real.columns:
+            fig4 = px.bar(df_real, x="Location", y="Review Rating", color=promo_col, barmode="group",
+                          title="4. Average Review Rating by Location",
+                          color_discrete_sequence=["#e0c3fc", "#a18cd1"])
+            st.plotly_chart(fig4, use_container_width=True)
+            
+    st.markdown("---")
+    fig5 = px.scatter(df_real, x="Age", y="Purchase Amount (USD)", color=promo_col,
+                      title="5. Correlation: Age vs Purchase Amount vs Promo Code Usage",
+                      color_discrete_sequence=["#ff9a9e", "#fecfef"])
+    st.plotly_chart(fig5, use_container_width=True)
+
+with tab3:
+    st.markdown("## 📋 Real Customer Dataset (Top 10 Rows)")
+    st.markdown("Dưới đây là dữ liệu thực tế được trích xuất từ hệ thống quản lý để phân tích mẫu:")
+    
+    st.dataframe(df_real.head(10), use_container_width=True)
+    
+    st.markdown("### 📊 Quick Summary Metrics")
+    m_col1, m_col2, m_col3 = st.columns(3)
+    m_col1.metric("Total Sample Records", f"{len(df_real)} rows")
+    
+    if "Purchase Amount (USD)" in df_real.columns:
+        m_col2.metric("Avg Purchase Amount", f"${df_real['Purchase Amount (USD)'].mean():.2f}")
+    if "Age" in df_real.columns:
+        m_col3.metric("Avg Customer Age", f"{df_real['Age'].mean():.1f} years old")
