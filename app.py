@@ -185,4 +185,177 @@ def load_real_data():
 
 model, le = load_models()
 df_real = load_real_data()
-df_real = df_real
+df_real = df_real.drop(columns=["Customer ID"], errors="ignore")
+
+st.markdown("# 🛍️ Shopping Trends & Predictive Intelligence")
+st.markdown("<p style='color: #64748b; font-size: 1.1rem; margin-top: -0.5rem; margin-bottom: 1.5rem;'>Advanced Machine Learning Model Evaluation & Consumer Insights Hub</p>", unsafe_allow_html=True)
+
+st.sidebar.header("📝 Customer Attributes")
+age = st.sidebar.slider("Age", 18, 70, 25)
+gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
+category = st.sidebar.selectbox("Category", ["Clothing", "Footwear", "Accessories", "Outerwear"])
+item = st.sidebar.selectbox("Item Purchased", ["Blouse", "Sweater", "Jeans", "Sandals", "Shirt", "Shoes"])
+purchase_amount = st.sidebar.slider("Purchase Amount (USD)", 20, 100, 50)
+discount = st.sidebar.selectbox("Discount Applied", ["Yes", "No"])
+location = st.sidebar.selectbox("Location", ["Kentucky", "Maine", "Massachusetts", "Rhode Island", "Oregon", "California", "Texas", "New York"])
+size = st.sidebar.selectbox("Size", ["S", "M", "L", "XL"])
+color = st.sidebar.selectbox("Color", ["Gray", "Maroon", "Turquoise", "Black", "White", "Blue"])
+season = st.sidebar.selectbox("Season", ["Spring", "Summer", "Fall", "Winter"])
+review = st.sidebar.slider("Review Rating", 1.0, 5.0, 3.5)
+subscription_status = st.sidebar.selectbox("Subscription Status", ["Yes", "No"])
+shipping_type = st.sidebar.selectbox("Shipping Type", ["Standard", "Express", "Free Shipping", "Next Day Air"])
+previous_purchases = st.sidebar.slider("Previous Purchases", 0, 50, 14)
+payment_method = st.sidebar.selectbox("Payment Method", ["Credit Card", "Cash", "PayPal", "Venmo"])
+frequency_of_purchases = st.sidebar.selectbox("Frequency of Purchases", ["Weekly", "Monthly", "Quarterly", "Annually", "Fortnightly"])
+
+age_group = pd.cut([age], bins=[18, 35, 55, 70, float("inf")], labels=["19-35", "36-55", "55-70", "71+"])[0]
+
+input_data = pd.DataFrame([{
+    "Age": age, "AgeGroup": age_group, "Gender": gender, "Item Purchased": item,
+    "Category": category, "Purchase Amount (USD)": purchase_amount, "Discount Applied": discount,
+    "Location": location, "Size": size, "Color": color, "Season": season, "Review Rating": review,
+    "Subscription Status": subscription_status, "Shipping Type": shipping_type, 
+    "Previous Purchases": previous_purchases, "Payment Method": payment_method,
+    "Frequency of Purchases": frequency_of_purchases
+}])
+
+input_data = input_data.reindex(columns=model.feature_names_in_, fill_value=0)
+
+tab1, tab2, tab3 = st.tabs([
+    "🎯 Predict Promo Code", 
+    "📊 Train Model Insights", 
+    "📋 Raw Data Explorer"
+])
+
+with tab1:
+    st.markdown('<div class="card-container">', unsafe_allow_html=True)
+    st.markdown("## 🎯 AI Promo Code Prediction Inference")
+    st.markdown("<p style='color: #64748b;'>Configure customer attributes in the sidebar panel and click below to process predictive analytics.</p>", unsafe_allow_html=True)
+    
+    col_b1, col_b2, col_b3 = st.columns([1.2, 1, 1.2])
+    with col_b2:
+        btn_predict = st.button("🚀 Execute Prediction Model")
+
+    if btn_predict:
+        st.markdown("<br>", unsafe_allow_html=True)
+        prediction = model.predict(input_data)
+        result = le.inverse_transform(prediction)[0]
+
+        if result == "Yes" or result == 1:
+            st.success("🎉 ANALYSIS RESULT: THIS CUSTOMER IS HIGHLY LIKELY TO USE A PROMO CODE!")
+            st.balloons()
+        else:
+            st.error("❌ ANALYSIS RESULT: THIS CUSTOMER IS UNLIKELY TO USE A PROMO CODE.")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        with st.expander("🔍 Processed Structural Vector Inputs"):
+            st.dataframe(input_data)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with tab2:
+    st.markdown('<div class="card-container">', unsafe_allow_html=True)
+    st.markdown("## 📊 Statistical Exploration & Validation Analytics")
+    
+    st.markdown("<br><h3>1. Data Distribution Framework</h3>", unsafe_allow_html=True)
+    g_col1, g_col2 = st.columns(2)
+    
+    with g_col1:
+        if "Category" in df_real.columns:
+            fig_count = px.histogram(df_real, x="Category", 
+                                     title="Volumetric Distribution by Product Category",
+                                     color="Category",
+                                     color_discrete_sequence=px.colors.sequential.dense)
+            fig_count.update_layout(
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis_title="Category", 
+                yaxis_title="Record Count", 
+                showlegend=False
+            )
+            st.plotly_chart(fig_count, use_container_width=True)
+            
+    with g_col2:
+        if "Promo Code Used" in df_real.columns:
+            fig_promo = px.histogram(df_real, x="Promo Code Used", 
+                                     title="Target Variable Imbalance Verification (Promo Code Used)",
+                                     color="Promo Code Used",
+                                     color_discrete_sequence=["#4f46e5", "#cbd5e1"])
+            fig_promo.update_layout(
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis_title="Promo Code Used", 
+                yaxis_title="Record Count", 
+                showlegend=False
+            )
+            st.plotly_chart(fig_promo, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="card-container">', unsafe_allow_html=True)
+    st.markdown("<h3>2. Data Integrity & Schema Audit</h3>", unsafe_allow_html=True)
+    s_col1, s_col2 = st.columns(2)
+    with s_col1:
+        st.markdown("**Structural Core Information (`df.info()`):**")
+        buffer = io.StringIO()
+        df_real.info(buf=buffer)
+        info_str = buffer.getvalue()
+        st.text_area("", info_str, height=230, label_visibility="collapsed")
+        
+    with s_col2:
+        st.markdown("**Missing Data Null Vector Matrices (`df.isnull().sum()`):**")
+        null_series = df_real.isnull().sum()
+        df_null = pd.DataFrame({"Data Attributes": null_series.index, "Null Vector Sum": null_series.values})
+        st.dataframe(df_null, use_container_width=True, height=230)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="card-container">', unsafe_allow_html=True)
+    st.markdown("<h3>3. Real-time Production Model Performance</h3>", unsafe_allow_html=True)
+    
+    try:
+        X_eval = df_real.drop(columns=["Promo Code Used"], errors="ignore")
+        X_eval = X_eval.reindex(columns=model.feature_names_in_, fill_value=0)
+        
+        y_true_raw = df_real["Promo Code Used"] if "Promo Code Used" in df_real.columns else df_real[df_real.columns[-1]]
+        y_true = le.transform(y_true_raw)
+        y_pred = model.predict(X_eval)
+        
+        acc = accuracy_score(y_true, y_pred)
+        cm = confusion_matrix(y_true, y_pred)
+        report = classification_report(y_true, y_pred, target_names=le.classes_)
+        
+        m_col1, m_col2 = st.columns([1, 1.2])
+        
+        with m_col1:
+            st.metric(label="🎯 Measured Validation Accuracy", value=f"{acc * 100:.2f} %")
+            st.markdown("<br>**Confusion Matrix Heatmap Alignment:**", unsafe_allow_html=True)
+            x_labels = [f"Pred: {c}" for c in le.classes_]
+            y_labels = [f"True: {c}" for c in le.classes_]
+            
+            fig_cm = ff.create_annotated_heatmap(
+                z=cm, 
+                x=x_labels, 
+                y=y_labels, 
+                colorscale='Purples',
+                showscale=False
+            )
+            fig_cm.update_layout(
+                margin=dict(t=10, b=10, l=10, r=10), 
+                height=240,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)'
+            )
+            st.plotly_chart(fig_cm, use_container_width=True)
+            
+        with m_col2:
+            st.markdown("**Production Classification Report Matrix:**")
+            st.markdown(f'<div class="report-text">{report}</div>', unsafe_allow_html=True)
+            
+    except Exception as e:
+        st.warning(f"Tính toán hiệu năng lỗi do bất đối xứng cấu trúc tệp dữ liệu: {str(e)}")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with tab3:
+    st.markdown('<div class="card-container">', unsafe_allow_html=True)
+    st.markdown("<h2>📋 Comprehensive Enterprise Database Registry (Top 10 Rows)</h2>")
+    st.markdown("<p style='color: #64748b; margin-bottom: 1.5rem;'>Interactive relational tabular view containing top 10 rows of real available customer transaction properties.</p>", unsafe_allow_html=True)
+    st.dataframe(df_real.head(10), use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
