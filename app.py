@@ -180,33 +180,43 @@ with tab2:
         promo_col = df_real.columns[-1]
 
     with g_col1:
-        fig1 = px.histogram(df_real, x="Age", color=promo_col, barmode="group",
-                            title="1. Age Distribution by Promo Code Usage",
+        # STYLE 1: Biểu đồ cột chồng (Stacked Bar Chart)
+        fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="stack",
+                            title="1. [Bar Chart] Promo Code Count by Gender",
                             color_discrete_sequence=["#a18cd1", "#fbc2eb"])
         st.plotly_chart(fig1, use_container_width=True)
         
-        fig3 = px.box(df_real, x="Category", y="Purchase Amount (USD)", color=promo_col,
-                      title="3. Purchase Amount Distribution by Category",
-                      color_discrete_sequence=["#8ec5fc", "#e0c3fc"])
-        st.plotly_chart(fig3, use_container_width=True)
+        # STYLE 3: Biểu đồ tròn (Pie Chart)
+        if "Category" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
+            fig3 = px.pie(df_real, names="Category", values="Purchase Amount (USD)",
+                          title="3. [Pie Chart] Purchase Share by Product Category",
+                          color_discrete_sequence=["#8ec5fc", "#e0c3fc", "#fbc2eb"])
+            st.plotly_chart(fig3, use_container_width=True)
 
     with g_col2:
-        fig2 = px.histogram(df_real, x="Gender", color=promo_col, barmode="group",
-                            title="2. Promo Code Usage Count by Gender",
-                            color_discrete_sequence=["#fbc2eb", "#8ec5fc"])
-        st.plotly_chart(fig2, use_container_width=True)
+        # STYLE 2: Biểu đồ đường (Line Chart)
+        if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
+            df_line = df_real.groupby("Age", as_index=False)["Purchase Amount (USD)"].mean()
+            fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)",
+                           title="2. [Line Chart] Average Purchase Amount by Age Trend",
+                           color_discrete_sequence=["#fbc2eb"])
+            st.plotly_chart(fig2, use_container_width=True)
 
-        if "Location" in df_real.columns:
-            fig4 = px.bar(df_real, x="Location", y="Review Rating", color=promo_col, barmode="group",
-                          title="4. Average Review Rating by Location",
+        # STYLE 4: Biểu đồ hộp (Box Plot)
+        if "Location" in df_real.columns and "Review Rating" in df_real.columns:
+            fig4 = px.box(df_real, x="Location", y="Review Rating", color=promo_col,
+                          title="4. [Box Plot] Review Rating Distribution by Location",
                           color_discrete_sequence=["#e0c3fc", "#a18cd1"])
             st.plotly_chart(fig4, use_container_width=True)
             
     st.markdown("---")
-    fig5 = px.scatter(df_real, x="Age", y="Purchase Amount (USD)", color=promo_col,
-                      title="5. Correlation: Age vs Purchase Amount vs Promo Code Usage",
-                      color_discrete_sequence=["#ff9a9e", "#fecfef"])
-    st.plotly_chart(fig5, use_container_width=True)
+    # STYLE 5: Biểu đồ bong bóng (Bubble/Scatter Chart)
+    if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns and "Review Rating" in df_real.columns:
+        fig5 = px.scatter(df_real, x="Age", y="Purchase Amount (USD)", color=promo_col,
+                          size="Review Rating", 
+                          title="5. [Bubble Chart] Multidimensional Analysis: Age vs Amount vs Rating",
+                          color_discrete_sequence=["#ff9a9e", "#8ec5fc"])
+        st.plotly_chart(fig5, use_container_width=True)
 
 with tab3:
     st.markdown("## 📋 Real Customer Dataset (Top 10 Rows)")
