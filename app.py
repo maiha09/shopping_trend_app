@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import joblib
 import plotly.express as px
+import base64
+import os
 
 st.set_page_config(
     page_title="Promo Code Prediction Dashboard",
@@ -9,80 +11,106 @@ st.set_page_config(
     layout="wide"
 )
 
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+# Hàm mã hóa ảnh cục bộ sang Base64 để nhúng vào CSS làm hình nền ổn định
+def get_base64_image(image_path):
+    if os.path.exists(image_path):
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    return ""
 
-.stApp {
-    background: radial-gradient(circle at top left, #f8fafc, #f1f5f9 60%, #e2e8f0);
+
+img_base64 = get_base64_image("images.jpg")
+
+st.markdown(f"""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&display=swap');
+
+/* Tạo lớp nền mờ sử dụng file ảnh images.jpg */
+.stApp::before {{
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("data:image/jpeg;base64,{img_base64}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.08; 
+    z-index: -1;
+}}
+
+.stApp {{
+    background: transparent;
     color: #1e293b;
     font-family: 'Inter', sans-serif;
-}
+}}
 
-.block-container {
+.block-container {{
     padding: 2.5rem 4rem;
-}
+}}
 
-section[data-testid="stSidebar"] {
-    background: rgba(255, 255, 255, 0.5) !important;
+section[data-testid="stSidebar"] {{
+    background: rgba(255, 255, 255, 0.6) !important;
     backdrop-filter: blur(20px);
     border-right: 1px solid rgba(226, 232, 240, 0.8);
-}
+}}
 
-h1 {
+h1 {{
     color: #0f172a !important;
     font-weight: 800 !important;
     font-family: 'Inter', sans-serif;
     letter-spacing: -1px;
     margin-bottom: 0.5rem;
-}
+}}
 
-.card-title-h2 {
-    color: #1e293b !important;
+.card-title-h2 {{
+    color: #6366f1 !important;
     font-weight: 700 !important;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.5px;
     font-size: 1.5rem;
     margin-top: 0px !important;
     margin-bottom: 0.5rem !important;
-}
+}}
 
-div[data-testid="stWidgetLabel"] p {
+div[data-testid="stWidgetLabel"] p {{
     font-weight: 600 !important;
     color: #475569 !important;
     font-size: 0.95rem !important;
-}
+}}
 
-input, .stSelectbox, .stSlider {
+input, .stSelectbox, .stSlider {{
     border-radius: 8px !important;
-}
+}}
 
-.stButton > button {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+.stButton > button {{
+    background: linear-gradient(135deg, #6366f1, #a855f7);
     color: #ffffff !important;
     border-radius: 8px;
     padding: 0.7rem 2rem;
     font-weight: 600;
     border: none;
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     transition: all 0.3s ease;
     width: 100%;
-}
+}}
 
-.stButton > button:hover {
+.stButton > button:hover {{
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
-    background: linear-gradient(135deg, #4338ca, #6d28d9);
-}
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+}}
 
-.stTabs [data-baseweb="tab-list"] {
+.stTabs [data-baseweb="tab-list"] {{
     gap: 12px;
     background-color: rgba(241, 245, 249, 0.6);
     padding: 8px;
     border-radius: 12px;
-}
+}}
 
-.stTabs [data-baseweb="tab"] {
+.stTabs [data-baseweb="tab"] {{
     height: 45px;
     white-space: pre;
     background-color: transparent;
@@ -92,51 +120,53 @@ input, .stSelectbox, .stSlider {
     font-size: 0.95rem;
     padding: 0px 24px;
     transition: all 0.2s ease;
-}
+}}
 
-.stTabs [data-baseweb="tab"]:hover {
-    color: #4f46e5;
+.stTabs [data-baseweb="tab"]:hover {{
+    color: #6366f1;
     background-color: rgba(255, 255, 255, 0.5);
-}
+}}
 
-.stTabs [aria-selected="true"] {
+.stTabs [aria-selected="true"] {{
     background-color: #ffffff !important;
-    color: #4f46e5 !important;
+    color: #6366f1 !important;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-}
+}}
 
-div[data-testid="stMetricValue"] {
+div[data-testid="stMetricValue"] {{
     font-weight: 700 !important;
-    color: #4f46e5 !important;
-}
+    color: #6366f1 !important;
+}}
 
-div[data-testid="stSuccessMessage"], div[data-testid="stErrorMessage"] {
+div[data-testid="stSuccessMessage"], div[data-testid="stErrorMessage"] {{
     border-radius: 10px;
     border: 1px solid transparent;
     padding: 1rem;
     font-weight: 500;
-}
+}}
 
-div[data-testid="stSuccessMessage"] {
-    background-color: #f0fdf4 !important;
-    border-color: #bbf7d0 !important;
-    color: #166534 !important;
-}
+div[data-testid="stSuccessMessage"] {{
+    background-color: #f5f3ff !important;
+    border-color: #ddd6fe !important;
+    color: #6d28d9 !important;
+}}
 
-div[data-testid="stErrorMessage"] {
+div[data-testid="stErrorMessage"] {{
     background-color: #fef2f2 !important;
     border-color: #fecaca !important;
     color: #991b1b !important;
-}
+}}
 
-.card-container {
-    background: rgba(255, 255, 255, 0.8);
+.card-container {{
+    /* Tăng độ đậm của khối chứa nội dung (0.9) kết hợp kính mờ để chữ đè lên ảnh nền rõ ràng nhất */
+    background: rgba(255, 255, 255, 0.9); 
+    backdrop-filter: blur(12px);
     border: 1px solid rgba(226, 232, 240, 0.8);
     border-radius: 16px;
     padding: 2.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
     margin-bottom: 1.5rem;
-}
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -242,14 +272,14 @@ with tab2:
     with g_col1:
         fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="stack",
                             title="1. Promo Code Count Distribution by Gender",
-                            color_discrete_sequence=["#4f46e5", "#cbd5e1"])
+                            color_discrete_sequence=["#6366f1", "#cbd5e1"])
         fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Gender", yaxis_title="Count")
         st.plotly_chart(fig1, use_container_width=True)
         
         if "Category" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
             fig3 = px.pie(df_real, names="Category", values="Purchase Amount (USD)", hole=0.4,
                           title="3. Revenue Contribution Share by Product Category",
-                          color_discrete_sequence=px.colors.sequential.dense)
+                          color_discrete_sequence=px.colors.sequential.Agsunset)
             fig3.update_layout(paper_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig3, use_container_width=True)
 
@@ -258,14 +288,14 @@ with tab2:
             df_line = df_real.groupby("Age", as_index=False)["Purchase Amount (USD)"].mean()
             fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)", markers=True,
                            title="2. Average Purchase Amount Trend by Age",
-                           color_discrete_sequence=["#7c3aed"])
+                           color_discrete_sequence=["#a855f7"])
             fig2.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Age", yaxis_title="Avg Amount (USD)")
             st.plotly_chart(fig2, use_container_width=True)
 
         if "Location" in df_real.columns and "Review Rating" in df_real.columns:
             fig4 = px.box(df_real, x="Location", y="Review Rating", color=promo_col,
                           title="4. Customer Review Rating Distribution by Location",
-                          color_discrete_sequence=["#4f46e5", "#94a3b8"])
+                          color_discrete_sequence=["#6366f1", "#94a3b8"])
             fig4.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Location", yaxis_title="Review Rating")
             st.plotly_chart(fig4, use_container_width=True)
             
@@ -274,7 +304,7 @@ with tab2:
         fig5 = px.scatter(df_real, x="Age", y="Purchase Amount (USD)", color=promo_col,
                           size="Review Rating", size_max=15,
                           title="5. Multidimensional Correlation: Age vs Amount vs Rating",
-                          color_discrete_sequence=["#7c3aed", "#cbd5e1"])
+                          color_discrete_sequence=px.colors.sequential.Purples_r)
         fig5.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Age", yaxis_title="Purchase Amount (USD)")
         st.plotly_chart(fig5, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
