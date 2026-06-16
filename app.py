@@ -8,11 +8,15 @@ st.set_page_config(
     page_icon="🛍️",
     layout="wide"
 )
-header[data-testid="stHeader"] {
-    background-color: rgba(0, 0, 0, 0) !important;
-}
+
 st.markdown("""
 <style>
+/* ẨN THANH HEADER MẶC ĐỊNH MÀU ĐEN CỦA STREAMLIT */
+header[data-testid="stHeader"] {
+    visibility: hidden;
+    height: 0%;
+}
+
 .stApp {
     background: linear-gradient(135deg, #f8f9fa 0%, #e3edff 100%);
     color: #111827;
