@@ -11,6 +11,11 @@ st.set_page_config(
 
 st.markdown("""
 <style>
+header[data-testid="stHeader"] {
+    visibility: hidden;
+    height: 0%;
+}
+
 .stApp {
     background: linear-gradient(135deg, #f8f9fa 0%, #e3edff 100%);
     color: #111827;
@@ -251,7 +256,8 @@ with tab2:
             fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)",
                            title="<b>2. Average Purchase Amount by Age Trend</b>",
                            color_discrete_sequence=[theme_colors[0]])
-            fig2.update_traces(line=dict(width=3.5), markers=dict(size=8, stroke_width=2))
+            # SỬA LỖI TẠI ĐÂY: Sử dụng mode thuần và truyền kích thước an toàn
+            fig2.update_traces(mode="lines+markers", line=dict(width=3), marker=dict(size=6))
             st.plotly_chart(customize_chart_theme(fig2), use_container_width=True)
 
         if "Location" in df_real.columns and "Review Rating" in df_real.columns:
