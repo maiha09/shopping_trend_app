@@ -1,84 +1,152 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import io
 import plotly.express as px
+import plotly.figure_factory as ff
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
 st.set_page_config(
-    page_title="Promo Code Prediction",
+    page_title="Promo Code Prediction Dashboard",
     page_icon="🛍️",
     layout="wide"
 )
 
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 .stApp {
-    background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
-    color: #1f2937;
-    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top left, #f8fafc, #f1f5f9 60%, #e2e8f0);
+    color: #1e293b;
+    font-family: 'Inter', sans-serif;
 }
 
 .block-container {
-    padding: 2rem 3rem;
+    padding: 2.5rem 4rem;
 }
 
 section[data-testid="stSidebar"] {
-    background: rgba(255,255,255,0.35);
-    backdrop-filter: blur(12px);
-    border-right: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 h1 {
-    color: #1f2937 !important;
-    font-weight: 800;
-    letter-spacing: 0.5px;
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -1px;
+    margin-bottom: 0.5rem;
 }
+
 h2, h3 {
-    color: #374151 !important;
+    color: #1e293b !important;
+    font-weight: 700 !important;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.5px;
+}
+
+div[data-testid="stWidgetLabel"] p {
+    font-weight: 600 !important;
+    color: #475569 !important;
+    font-size: 0.95rem !important;
 }
 
 input, .stSelectbox, .stSlider {
-    border-radius: 12px !important;
+    border-radius: 8px !important;
 }
 
 .stButton > button {
-    background: linear-gradient(90deg, #a18cd1, #fbc2eb);
-    color: white;
-    border-radius: 14px;
-    padding: 0.6rem 1.4rem;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #ffffff !important;
+    border-radius: 8px;
+    padding: 0.7rem 2rem;
     font-weight: 600;
     border: none;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    transition: all 0.3s ease;
     width: 100%;
 }
 
 .stButton > button:hover {
     transform: translateY(-2px);
-    transition: 0.2s;
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+    background: linear-gradient(135deg, #4338ca, #6d28d9);
+}
+
+.stTabs [data-baseweb="tab-list"] {
+    gap: 12px;
+    background-color: rgba(241, 245, 249, 0.6);
+    padding: 8px;
+    border-radius: 12px;
+}
+
+.stTabs [data-baseweb="tab"] {
+    height: 45px;
+    white-space: pre;
+    background-color: transparent;
+    border-radius: 8px;
+    color: #64748b;
+    font-weight: 600 !important;
+    font-size: 0.95rem;
+    padding: 0px 24px;
+    transition: all 0.2s ease;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+    color: #4f46e5;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.stTabs [aria-selected="true"] {
+    background-color: #ffffff !important;
+    color: #4f46e5 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+div[data-testid="stMetricValue"] {
+    font-weight: 700 !important;
+    color: #4f46e5 !important;
+}
+
+div[data-testid="stSuccessMessage"], div[data-testid="stErrorMessage"] {
+    border-radius: 10px;
+    border: 1px solid transparent;
+    padding: 1rem;
+    font-weight: 500;
 }
 
 div[data-testid="stSuccessMessage"] {
-    background: rgba(34,197,94,0.15);
-    border-left: 5px solid #22c55e;
-    border-radius: 12px;
-    color: #065f46;
+    background-color: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+    color: #166534 !important;
 }
 
 div[data-testid="stErrorMessage"] {
-    background: rgba(239,68,68,0.12);
-    border-left: 5px solid #ef4444;
-    border-radius: 12px;
-    color: #7f1d1d;
+    background-color: #fef2f2 !important;
+    border-color: #fecaca !important;
+    color: #991b1b !important;
 }
 
-details {
-    background: rgba(255,255,255,0.4);
-    border-radius: 12px;
-    padding: 0.5rem;
+.report-text {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #0f172a;
+    color: #38bdf8;
+    padding: 20px;
+    border-radius: 10px;
+    white-space: pre;
+    overflow-x: auto;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
 }
 
-button[data-baseweb="tab"] {
-    font-size: 16px !important;
-    font-weight: bold !important;
+.card-container {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+    margin-bottom: 1.5rem;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -96,139 +164,41 @@ def load_real_data():
         return df
     except:
         return pd.DataFrame({
-            "Age": [25, 34, 45, 22, 56, 60, 29, 38, 41, 23],
-            "Gender": ["Female", "Male", "Female", "Male", "Female", "Male", "Female", "Male", "Female", "Female"],
-            "Category": ["Clothing", "Footwear", "Accessories", "Clothing", "Footwear", "Clothing", "Accessories", "Footwear", "Clothing", "Accessories"],
-            "Purchase Amount (USD)": [55, 80, 45, 120, 30, 95, 70, 110, 65, 40],
-            "Promo Code Used": ["Yes", "No", "Yes", "No", "No", "Yes", "No", "Yes", "No", "Yes"],
-            "Review Rating": [4.5, 3.8, 4.0, 4.2, 3.5, 4.8, 3.9, 4.7, 4.1, 4.4],
-            "Location": ["California", "New York", "Texas", "California", "Florida", "Maine", "Oregon", "Texas", "New York", "California"]
+            "Age": [55, 19, 50, 21, 45, 28, 32, 60, 41, 34],
+            "Gender": ["Male", "Male", "Male", "Male", "Male", "Female", "Female", "Male", "Female", "Female"],
+            "Item Purchased": ["Blouse", "Sweater", "Jeans", "Sandals", "Blouse", "Jeans", "Sweater", "Sandals", "Blouse", "Jeans"],
+            "Category": ["Clothing", "Clothing", "Clothing", "Footwear", "Clothing", "Clothing", "Clothing", "Footwear", "Clothing", "Clothing"],
+            "Purchase Amount (USD)": [53, 64, 73, 90, 49, 55, 80, 45, 120, 65],
+            "Location": ["Kentucky", "Maine", "Massachusetts", "Rhode Island", "Oregon", "Maine", "Oregon", "Kentucky", "Massachusetts", "Rhode Island"],
+            "Size": ["L", "L", "S", "M", "M", "S", "M", "L", "L", "S"],
+            "Color": ["Gray", "Maroon", "Maroon", "Maroon", "Turquoise", "Gray", "Turquoise", "Gray", "Maroon", "Turquoise"],
+            "Season": ["Winter", "Winter", "Spring", "Spring", "Spring", "Winter", "Winter", "Spring", "Spring", "Winter"],
+            "Review Rating": [3.1, 3.1, 3.1, 3.5, 2.7, 4.0, 4.2, 3.8, 4.5, 3.9],
+            "Subscription Status": ["Yes", "Yes", "Yes", "Yes", "Yes", "No", "No", "Yes", "No", "No"],
+            "Shipping Type": ["Express", "Express", "Free Shipping", "Next Day Air", "Free Shipping", "Express", "Standard", "Free Shipping", "Express", "Standard"],
+            "Discount Applied": ["Yes", "Yes", "Yes", "Yes", "Yes", "No", "No", "Yes", "No", "No"],
+            "Promo Code Used": ["Yes", "Yes", "Yes", "Yes", "Yes", "No", "No", "Yes", "No", "No"],
+            "Previous Purchases": [14, 2, 23, 49, 31, 12, 5, 20, 8, 15],
+            "Payment Method": ["Venmo", "Cash", "Credit Card", "PayPal", "PayPal", "Cash", "Venmo", "PayPal", "Credit Card", "Cash"],
+            "Frequency of Purchases": ["Fortnightly", "Fortnightly", "Weekly", "Weekly", "Annually", "Monthly", "Fortnightly", "Weekly", "Annually", "Monthly"]
         })
 
 model, le = load_models()
 df_real = load_real_data()
+df_real = df_real.drop(columns=["Customer ID"], errors="ignore")
 
-st.markdown("# 🛍️ Customer Insights & Promo Code Dashboard")
-st.markdown("### 🚀 AI-powered prediction and data visualization system")
-st.markdown("---")
+st.markdown("# 🛍️ Shopping Trends & Predictive Intelligence")
+st.markdown("<p style='color: #64748b; font-size: 1.1rem; margin-top: -0.5rem; margin-bottom: 1.5rem;'>Advanced Machine Learning Model Evaluation & Consumer Insights Hub</p>", unsafe_allow_html=True)
 
-st.sidebar.header("Customer Information")
+st.sidebar.header("📝 Customer Attributes")
 age = st.sidebar.slider("Age", 18, 70, 25)
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
-category = st.sidebar.selectbox("Category", ["Clothing", "Footwear", "Accessories"])
-item = st.sidebar.selectbox("Item Purchased", ["Blouse", "Sweater", "Jeans", "Shoes", "Shirt"])
+category = st.sidebar.selectbox("Category", ["Clothing", "Footwear", "Accessories", "Outerwear"])
+item = st.sidebar.selectbox("Item Purchased", ["Blouse", "Sweater", "Jeans", "Sandals", "Shirt", "Shoes"])
 purchase_amount = st.sidebar.slider("Purchase Amount (USD)", 20, 100, 50)
 discount = st.sidebar.selectbox("Discount Applied", ["Yes", "No"])
-location = st.sidebar.selectbox("Location", ["Kentucky", "Maine", "Oregon", "California", "Texas", "New York", "Florida"])
+location = st.sidebar.selectbox("Location", ["Kentucky", "Maine", "Massachusetts", "Rhode Island", "Oregon", "California", "Texas", "New York"])
 size = st.sidebar.selectbox("Size", ["S", "M", "L", "XL"])
-color = st.sidebar.selectbox("Color", ["Black", "White", "Blue", "Red", "Green", "Yellow", "Pink", "Purple"])
+color = st.sidebar.selectbox("Color", ["Gray", "Maroon", "Turquoise", "Black", "White", "Blue"])
 season = st.sidebar.selectbox("Season", ["Spring", "Summer", "Fall", "Winter"])
-review = st.sidebar.slider("Review Rating", 1.0, 5.0, 3.0)
-subscription_status = st.sidebar.selectbox("Subscription Status", ["Yes", "No"])
-shipping_type = st.sidebar.selectbox("Shipping Type", ["Standard", "Express", "Free Shipping"])
-previous_purchases = st.sidebar.slider("Previous Purchases", 0, 50, 10)
-payment_method = st.sidebar.selectbox("Payment Method", ["Credit Card", "Cash", "PayPal"])
-frequency_of_purchases = st.sidebar.selectbox("Frequency of Purchases", ["Weekly", "Monthly", "Quarterly", "Annually"])
-
-age_group = pd.cut([age], bins=[18, 35, 55, 70, float("inf")], labels=["19-35", "36-55", "55-70", "71+"])[0]
-
-input_data = pd.DataFrame([{
-    "Age": age, "AgeGroup": age_group, "Gender": gender, "Item Purchased": item,
-    "Category": category, "Purchase Amount (USD)": purchase_amount, "Discount Applied": discount,
-    "Location": location, "Size": size, "Color": color, "Season": season, "Review Rating": review,
-    "Subscription Status": subscription_status, "Shipping Type": shipping_type, 
-    "Previous Purchases": previous_purchases, "Payment Method": payment_method,
-    "Frequency of Purchases": frequency_of_purchases
-}])
-
-input_data = input_data.reindex(columns=model.feature_names_in_, fill_value=0)
-
-tab1, tab2, tab3 = st.tabs([
-    "🎯 Predict Promo Code", 
-    "📊 Data Visualizations", 
-    "📋 Real Dataset Sample"
-])
-
-with tab1:
-    st.markdown("## 🎯 Prediction Result")
-    st.markdown("Vui lòng nhập thông tin khách hàng ở thanh điều hướng bên trái (Sidebar), sau đó nhấn nút dưới đây để dự đoán.")
-    
-    predict_col_1, predict_col_2, predict_col_3 = st.columns([1, 1, 1])
-    with predict_col_2:
-        btn_predict = st.button("🚀 Predict Promo Code Usage")
-
-    if btn_predict:
-        prediction = model.predict(input_data)
-        result = le.inverse_transform(prediction)[0]
-
-        if result == "Yes" or result == 1:
-            st.success("🎉 CUSTOMER WILL USE PROMO CODE")
-            st.balloons()
-        else:
-            st.error("❌ CUSTOMER WILL NOT USE PROMO CODE")
-
-        st.markdown("---")
-        with st.expander("🔍 View Processed Input Data"):
-            st.dataframe(input_data)
-
-with tab2:
-    st.markdown("## 📊 Data Insights & Trends")
-    g_col1, g_col2 = st.columns(2)
-    
-    promo_col = "Promo Code Used"
-    if promo_col not in df_real.columns:
-        promo_col = df_real.columns[-1]
-
-    with g_col1:
-        # STYLE 1: Biểu đồ cột chồng (Stacked Bar Chart)
-        fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="stack",
-                            title="1. Promo Code Count by Gender",
-                            color_discrete_sequence=["#a18cd1", "#fbc2eb"])
-        st.plotly_chart(fig1, use_container_width=True)
-        
-        # STYLE 3: Biểu đồ tròn (Pie Chart)
-        if "Category" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
-            fig3 = px.pie(df_real, names="Category", values="Purchase Amount (USD)",
-                          title="3. Purchase Share by Product Category",
-                          color_discrete_sequence=["#8ec5fc", "#e0c3fc", "#fbc2eb"])
-            st.plotly_chart(fig3, use_container_width=True)
-
-    with g_col2:
-        # STYLE 2: Biểu đồ đường (Line Chart)
-        if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
-            df_line = df_real.groupby("Age", as_index=False)["Purchase Amount (USD)"].mean()
-            fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)",
-                           title="2. Average Purchase Amount by Age Trend",
-                           color_discrete_sequence=["#fbc2eb"])
-            st.plotly_chart(fig2, use_container_width=True)
-
-        # STYLE 4: Biểu đồ hộp (Box Plot)
-        if "Location" in df_real.columns and "Review Rating" in df_real.columns:
-            fig4 = px.box(df_real, x="Location", y="Review Rating", color=promo_col,
-                          title="4. Review Rating Distribution by Location",
-                          color_discrete_sequence=["#e0c3fc", "#a18cd1"])
-            st.plotly_chart(fig4, use_container_width=True)
-            
-    st.markdown("---")
-    # STYLE 5: Biểu đồ bong bóng (Bubble/Scatter Chart)
-    if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns and "Review Rating" in df_real.columns:
-        fig5 = px.scatter(df_real, x="Age", y="Purchase Amount (USD)", color=promo_col,
-                          size="Review Rating", 
-                          title="5. Multidimensional Analysis: Age vs Amount vs Rating",
-                          color_discrete_sequence=["#ff9a9e", "#8ec5fc"])
-        st.plotly_chart(fig5, use_container_width=True)
-
-with tab3:
-    st.markdown("## 📋 Real Customer Dataset (Top 10 Rows)")
-    st.markdown("Dưới đây là dữ liệu thực tế được trích xuất từ hệ thống quản lý để phân tích mẫu:")
-    
-    st.dataframe(df_real.head(10), use_container_width=True)
-    
-    st.markdown("### 📊 Quick Summary Metrics")
-    m_col1, m_col2, m_col3 = st.columns(3)
-    m_col1.metric("Total Sample Records", f"{len(df_real)} rows")
-    
-    if "Purchase Amount (USD)" in df_real.columns:
-        m_col2.metric("Avg Purchase Amount", f"${df_real['Purchase Amount (USD)'].mean():.2f}")
-    if "Age" in df_real.columns:
-        m_col3.metric("Avg Customer Age", f"{df_real['Age'].mean():.1f} years old")
+review = st.sidebar.slider("
