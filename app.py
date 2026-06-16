@@ -16,6 +16,7 @@ header[data-testid="stHeader"] {
     height: 0%;
 }
 
+/* NỀN ỨNG DỤNG CHÍNH */
 .stApp {
     background: linear-gradient(135deg, #f8f9fa 0%, #e3edff 100%);
     color: #111827;
@@ -26,11 +27,14 @@ header[data-testid="stHeader"] {
     padding: 2rem 3rem;
 }
 
+/* THANH ĐIỀU HƯỚNG SIDEBAR: Đồng bộ hoàn toàn với màu nền chính */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #1e3a8a 0%, #311b92 100%) !important;
-    box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e3edff 100%) !important;
+    box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.05);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+/* Đổi màu chữ Sidebar sang màu tối để nổi bật trên nền Pastel */
 section[data-testid="stSidebar"] .stMarkdown, 
 section[data-testid="stSidebar"] label, 
 section[data-testid="stSidebar"] p,
@@ -38,16 +42,27 @@ section[data-testid="stSidebar"] h1,
 section[data-testid="stSidebar"] h2,
 section[data-testid="stSidebar"] h3,
 section[data-testid="stSidebar"] span {
-    color: #ffffff !important;
+    color: #111827 !important;
     font-weight: 600 !important;
 }
 
+/* CĂN GIỮA TIÊU ĐỀ CHÍNH */
 h1 {
     color: #1e1b4b !important;
     font-weight: 800;
     letter-spacing: 0.5px;
+    text-align: center;
 }
-h2, h3 {
+
+/* CĂN GIỮA TIÊU ĐỀ PHỤ */
+h3 {
+    color: #1e3a8a !important;
+    font-weight: 700 !important;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h2 {
     color: #1e3a8a !important;
     font-weight: 700 !important;
 }
@@ -256,7 +271,6 @@ with tab2:
             fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)",
                            title="<b>2. Average Purchase Amount by Age Trend</b>",
                            color_discrete_sequence=[theme_colors[0]])
-            # SỬA LỖI TẠI ĐÂY: Sử dụng mode thuần và truyền kích thước an toàn
             fig2.update_traces(mode="lines+markers", line=dict(width=3), marker=dict(size=6))
             st.plotly_chart(customize_chart_theme(fig2), use_container_width=True)
 
