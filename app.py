@@ -11,6 +11,11 @@ st.set_page_config(
 
 st.markdown("""
 <style>
+header[data-testid="stHeader"] {
+    visibility: hidden;
+    height: 0%;
+}
+
 .stApp {
     background: linear-gradient(135deg, #f8f9fa 0%, #e3edff 100%);
     color: #111827;
@@ -248,9 +253,11 @@ with tab2:
     with g_col2:
         if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
             df_line = df_real.groupby("Age", as_index=False)["Purchase Amount (USD)"].mean()
+            # FIX LỖI: Thêm tham số markers=True trực tiếp vào px.line
             fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)",
                            title="<b>2. Average Purchase Amount by Age Trend</b>",
-                           color_discrete_sequence=[theme_colors[0]])
+                           color_discrete_sequence=[theme_colors[0]],
+                           markers=True)
             fig2.update_traces(line=dict(width=3.5), markers=dict(size=8, stroke_width=2))
             st.plotly_chart(customize_chart_theme(fig2), use_container_width=True)
 
