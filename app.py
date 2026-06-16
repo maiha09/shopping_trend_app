@@ -9,14 +9,11 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- BẢNG MÀU CHỦ ĐẠO TOÀN DIỆN (CSS GIAO DIỆN) ---
 st.markdown("""
 <style>
-/* Toàn bộ nền ứng dụng dạng Gradient mượt mà */
 .stApp {
-    background: linear-gradient(135deg, #8ec5fc 0%, #e4efe9 100%);
-    background-image: linear-gradient(135deg, #8ec5fc 0%, #8ec5fc 100%);
-    color: #1f2937;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e3edff 100%);
+    color: #111827;
     font-family: 'Segoe UI', sans-serif;
 }
 
@@ -24,13 +21,11 @@ st.markdown("""
     padding: 2rem 3rem;
 }
 
-/* THANH ĐIỀU HƯỚNG (SIDEBAR) NỔI BẬT: Đổi sang tone Tím hoàng gia kết hợp Xanh Dạ Quang huyền bí */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #311b92 0%, #0d47a1 100%) !important;
-    box-shadow: 5px 0px 15px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(180deg, #1e3a8a 0%, #311b92 100%) !important;
+    box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Ép toàn bộ chữ, tiêu đề, label bên Sidebar sang màu trắng tinh khôi để hiển thị cực rõ */
 section[data-testid="stSidebar"] .stMarkdown, 
 section[data-testid="stSidebar"] label, 
 section[data-testid="stSidebar"] p,
@@ -42,80 +37,77 @@ section[data-testid="stSidebar"] span {
     font-weight: 600 !important;
 }
 
-/* Tùy chỉnh tiêu đề chính ngoài Dashboard */
 h1 {
-    color: #2e1a47 !important;
+    color: #1e1b4b !important;
     font-weight: 800;
     letter-spacing: 0.5px;
 }
 h2, h3 {
-    color: #311b92 !important;
+    color: #1e3a8a !important;
+    font-weight: 700 !important;
 }
 
-/* Bo tròn mượt mà các ô input dữ liệu */
 input, .stSelectbox, .stSlider {
     border-radius: 12px !important;
 }
 
-/* Nút bấm dự đoán chuyển sắc Gradient đồng điệu */
 .stButton > button {
-    background: linear-gradient(90deg, #7c4dff, #448aff);
+    background: linear-gradient(90deg, #4f46e5, #3b82f6);
     color: white !important;
     border-radius: 14px;
     padding: 0.6rem 1.4rem;
     font-weight: 600;
     border: none;
-    box-shadow: 0px 4px 15px rgba(108, 92, 231, 0.3);
+    box-shadow: 0px 4px 12px rgba(79, 70, 229, 0.2);
     width: 100%;
     transition: all 0.3s ease;
 }
 
 .stButton > button:hover {
     transform: translateY(-2px);
-    box-shadow: 0px 6px 20px rgba(108, 92, 231, 0.5);
-    background: linear-gradient(90deg, #651fff, #2979ff);
+    box-shadow: 0px 6px 15px rgba(79, 70, 229, 0.4);
+    background: linear-gradient(90deg, #4338ca, #2563eb);
     color: white !important;
 }
 
-/* Hộp thông báo kết quả được bo góc đồng bộ */
 div[data-testid="stSuccessMessage"] {
     background: rgba(34, 197, 94, 0.15);
     border-left: 5px solid #22c55e;
     border-radius: 12px;
-    color: #166534;
+    color: #14532d;
+    font-weight: 600;
 }
 
 div[data-testid="stErrorMessage"] {
     background: rgba(239, 68, 68, 0.12);
     border-left: 5px solid #ef4444;
     border-radius: 12px;
-    color: #991b1b;
+    color: #7f1d1d;
+    font-weight: 600;
 }
 
 details {
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.6);
     border-radius: 12px;
     padding: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-/* Chỉnh các tab hiển thị rõ ràng hơn */
 button[data-baseweb="tab"] {
     font-size: 16px !important;
-    font-weight: bold !important;
+    font-weight: 700 !important;
     color: #4b5563 !important;
 }
 
 button[data-baseweb="tab"][aria-selected="true"] {
-    color: #311b92 !important;
-    border-bottom-color: #311b92 !important;
+    color: #1e3a8a !important;
+    border-bottom-color: #1e3a8a !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
 @st.cache_resource
 def load_models():
-    # Sử dụng khối lệnh phòng hờ trong trường hợp môi trường chưa thiết lập đủ file pkl
     try:
         model = joblib.load("model/promo_model.pkl")
         le = joblib.load("label_encoder.pkl")
@@ -151,7 +143,6 @@ st.markdown("# 🛍️ Customer Insights & Promo Code Dashboard")
 st.markdown("### 🚀 AI-powered prediction and data visualization system")
 st.markdown("---")
 
-# --- SIDEBAR (THANH ĐIỀU HƯỚNG) ---
 st.sidebar.header("Customer Information")
 age = st.sidebar.slider("Age", 18, 70, 25)
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
@@ -219,30 +210,35 @@ with tab2:
     if promo_col not in df_real.columns:
         promo_col = df_real.columns[-1]
 
-    # --- HÀM KHỬ LỖI PLOTLY & THIẾT LẬP NỀN GLASSMORPHISM CHO BIỂU ĐỒ ---
     def customize_chart_theme(fig):
         fig.update_layout(
-            paper_bgcolor='rgba(255, 255, 255, 0.45)', # Nền kiếng mờ trong suốt hòa trộn với app background
-            plot_bgcolor='rgba(0, 0, 0, 0)',            # Phần lòng đồ thị trong suốt hoàn toàn
-            font=dict(color="#1f2937", family="Segoe UI"), # Font tối thanh lịch dễ đọc
-            margin=dict(l=30, r=30, t=60, b=30),
-            title_font=dict(size=15),
-            xaxis=dict(gridcolor='rgba(0, 0, 0, 0.05)', zeroline=False), # Lưới x mờ tinh tế
-            yaxis=dict(gridcolor='rgba(0, 0, 0, 0.05)', zeroline=False)  # Lưới y mờ tinh tế
+            paper_bgcolor='rgba(255, 255, 255, 0.75)', 
+            plot_bgcolor='rgba(255, 255, 255, 0.4)',   
+            font=dict(color="#111827", family="Segoe UI", size=12), 
+            margin=dict(l=40, r=40, t=65, b=40),
+            title_font=dict(size=15, color="#1e3a8a"),
+            legend=dict(font=dict(color="#111827")),   
+            xaxis=dict(
+                gridcolor='rgba(17, 24, 39, 0.12)',     
+                zerolinecolor='rgba(17, 24, 39, 0.3)',  
+                tickfont=dict(color="#374151", size=11)
+            ),
+            yaxis=dict(
+                gridcolor='rgba(17, 24, 39, 0.12)',     
+                zerolinecolor='rgba(17, 24, 39, 0.3)',  
+                tickfont=dict(color="#374151", size=11)
+            )
         )
         return fig
 
-    # Khai báo dải màu biểu đồ dạng pastel đồng điệu: Tím Violet, Tím Nhạt, Xanh Sky, Xanh Mint
-    theme_colors = ["#7c4dff", "#fbc2eb", "#64b5f6", "#a18cd1", "#8ec5fc"]
+    theme_colors = ["#4f46e5", "#f43f5e", "#0ea5e9", "#10b981", "#84cc16"]
 
     with g_col1:
-        # STYLE 1: Biểu đồ cột chồng (Đã in đậm tiêu đề bằng cặp thẻ <b>)
         fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="stack",
                             title="<b>1. Promo Code Count by Gender</b>",
                             color_discrete_sequence=theme_colors)
         st.plotly_chart(customize_chart_theme(fig1), use_container_width=True)
         
-        # STYLE 3: Biểu đồ tròn
         if "Category" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
             fig3 = px.pie(df_real, names="Category", values="Purchase Amount (USD)",
                           title="<b>3. Purchase Share by Product Category</b>",
@@ -250,28 +246,26 @@ with tab2:
             st.plotly_chart(customize_chart_theme(fig3), use_container_width=True)
 
     with g_col2:
-        # STYLE 2: Biểu đồ đường
         if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
             df_line = df_real.groupby("Age", as_index=False)["Purchase Amount (USD)"].mean()
             fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)",
                            title="<b>2. Average Purchase Amount by Age Trend</b>",
                            color_discrete_sequence=[theme_colors[0]])
+            fig2.update_traces(line=dict(width=3.5), markers=dict(size=8, stroke_width=2))
             st.plotly_chart(customize_chart_theme(fig2), use_container_width=True)
 
-        # STYLE 4: Biểu đồ hộp (Box Plot)
         if "Location" in df_real.columns and "Review Rating" in df_real.columns:
             fig4 = px.box(df_real, x="Location", y="Review Rating", color=promo_col,
                           title="<b>4. Review Rating Distribution by Location</b>",
-                          color_discrete_sequence=[theme_colors[3], theme_colors[0]])
+                          color_discrete_sequence=[theme_colors[2], theme_colors[1]])
             st.plotly_chart(customize_chart_theme(fig4), use_container_width=True)
             
     st.markdown("---")
-    # STYLE 5: Biểu đồ bong bóng (Bubble Chart)
     if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns and "Review Rating" in df_real.columns:
         fig5 = px.scatter(df_real, x="Age", y="Purchase Amount (USD)", color=promo_col,
                           size="Review Rating", 
                           title="<b>5. Multidimensional Analysis: Age vs Amount vs Rating</b>",
-                          color_discrete_sequence=["#ff9a9e", "#64b5f6"])
+                          color_discrete_sequence=[theme_colors[1], theme_colors[2]])
         st.plotly_chart(customize_chart_theme(fig5), use_container_width=True)
 
 with tab3:
