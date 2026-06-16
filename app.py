@@ -1,10 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import io
 import plotly.express as px
-import plotly.figure_factory as ff
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
 st.set_page_config(
     page_title="Promo Code Prediction Dashboard",
@@ -129,17 +126,6 @@ div[data-testid="stErrorMessage"] {
     color: #991b1b !important;
 }
 
-.report-text {
-    font-family: 'Courier New', Courier, monospace;
-    background-color: #0f172a;
-    color: #38bdf8;
-    padding: 20px;
-    border-radius: 10px;
-    white-space: pre;
-    overflow-x: auto;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
-}
-
 .card-container {
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(226, 232, 240, 0.8);
@@ -164,23 +150,13 @@ def load_real_data():
         return df
     except:
         return pd.DataFrame({
-            "Age": [55, 19, 50, 21, 45, 28, 32, 60, 41, 34],
-            "Gender": ["Male", "Male", "Male", "Male", "Male", "Female", "Female", "Male", "Female", "Female"],
-            "Item Purchased": ["Blouse", "Sweater", "Jeans", "Sandals", "Blouse", "Jeans", "Sweater", "Sandals", "Blouse", "Jeans"],
-            "Category": ["Clothing", "Clothing", "Clothing", "Footwear", "Clothing", "Clothing", "Clothing", "Footwear", "Clothing", "Clothing"],
-            "Purchase Amount (USD)": [53, 64, 73, 90, 49, 55, 80, 45, 120, 65],
-            "Location": ["Kentucky", "Maine", "Massachusetts", "Rhode Island", "Oregon", "Maine", "Oregon", "Kentucky", "Massachusetts", "Rhode Island"],
-            "Size": ["L", "L", "S", "M", "M", "S", "M", "L", "L", "S"],
-            "Color": ["Gray", "Maroon", "Maroon", "Maroon", "Turquoise", "Gray", "Turquoise", "Gray", "Maroon", "Turquoise"],
-            "Season": ["Winter", "Winter", "Spring", "Spring", "Spring", "Winter", "Winter", "Spring", "Spring", "Winter"],
-            "Review Rating": [3.1, 3.1, 3.1, 3.5, 2.7, 4.0, 4.2, 3.8, 4.5, 3.9],
-            "Subscription Status": ["Yes", "Yes", "Yes", "Yes", "Yes", "No", "No", "Yes", "No", "No"],
-            "Shipping Type": ["Express", "Express", "Free Shipping", "Next Day Air", "Free Shipping", "Express", "Standard", "Free Shipping", "Express", "Standard"],
-            "Discount Applied": ["Yes", "Yes", "Yes", "Yes", "Yes", "No", "No", "Yes", "No", "No"],
-            "Promo Code Used": ["Yes", "Yes", "Yes", "Yes", "Yes", "No", "No", "Yes", "No", "No"],
-            "Previous Purchases": [14, 2, 23, 49, 31, 12, 5, 20, 8, 15],
-            "Payment Method": ["Venmo", "Cash", "Credit Card", "PayPal", "PayPal", "Cash", "Venmo", "PayPal", "Credit Card", "Cash"],
-            "Frequency of Purchases": ["Fortnightly", "Fortnightly", "Weekly", "Weekly", "Annually", "Monthly", "Fortnightly", "Weekly", "Annually", "Monthly"]
+            "Age": [25, 34, 45, 22, 56, 60, 29, 38, 41, 23],
+            "Gender": ["Female", "Male", "Female", "Male", "Female", "Male", "Female", "Male", "Female", "Female"],
+            "Category": ["Clothing", "Footwear", "Accessories", "Clothing", "Footwear", "Clothing", "Accessories", "Footwear", "Clothing", "Accessories"],
+            "Purchase Amount (USD)": [55, 80, 45, 120, 30, 95, 70, 110, 65, 40],
+            "Promo Code Used": ["Yes", "No", "Yes", "No", "No", "Yes", "No", "Yes", "No", "Yes"],
+            "Review Rating": [4.5, 3.8, 4.0, 4.2, 3.5, 4.8, 3.9, 4.7, 4.1, 4.4],
+            "Location": ["California", "New York", "Texas", "California", "Florida", "Maine", "Oregon", "Texas", "New York", "California"]
         })
 
 model, le = load_models()
@@ -223,7 +199,7 @@ input_data = input_data.reindex(columns=model.feature_names_in_, fill_value=0)
 
 tab1, tab2, tab3 = st.tabs([
     "🎯 Predict Promo Code", 
-    "📊 Train Model Insights", 
+    "📊 Data Visualizations", 
     "📋 Raw Data Explorer"
 ])
 
@@ -254,103 +230,50 @@ with tab1:
 
 with tab2:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown("## 📊 Statistical Exploration & Validation Analytics")
+    st.markdown("<h2>📊 Customer Insights & Data Visualizations</h2>")
+    st.markdown("<p style='color: #64748b; margin-bottom: 2rem;'>Detailed exploratory analysis over five distinct high-aesthetic graphical styles.</p>", unsafe_allow_html=True)
     
-    st.markdown("<br><h3>1. Data Distribution Framework</h3>", unsafe_allow_html=True)
+    promo_col = "Promo Code Used" if "Promo Code Used" in df_real.columns else df_real.columns[-1]
     g_col1, g_col2 = st.columns(2)
     
     with g_col1:
-        if "Category" in df_real.columns:
-            fig_count = px.histogram(df_real, x="Category", 
-                                     title="Volumetric Distribution by Product Category",
-                                     color="Category",
-                                     color_discrete_sequence=px.colors.sequential.dense)
-            fig_count.update_layout(
-                plot_bgcolor='rgba(0,0,0,0)',
-                paper_bgcolor='rgba(0,0,0,0)',
-                xaxis_title="Category", 
-                yaxis_title="Record Count", 
-                showlegend=False
-            )
-            st.plotly_chart(fig_count, use_container_width=True)
-            
+        fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="stack",
+                            title="1. [Stacked Bar] Promo Code Count Distribution by Gender",
+                            color_discrete_sequence=["#4f46e5", "#cbd5e1"])
+        fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Gender", yaxis_title="Count")
+        st.plotly_chart(fig1, use_container_width=True)
+        
+        if "Category" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
+            fig3 = px.pie(df_real, names="Category", values="Purchase Amount (USD)", hole=0.4,
+                          title="3. [Donut Chart] Revenue Contribution Share by Product Category",
+                          color_discrete_sequence=px.colors.sequential.dense)
+            fig3.update_layout(paper_bgcolor='rgba(0,0,0,0)')
+            st.plotly_chart(fig3, use_container_width=True)
+
     with g_col2:
-        if "Promo Code Used" in df_real.columns:
-            fig_promo = px.histogram(df_real, x="Promo Code Used", 
-                                     title="Target Variable Imbalance Verification (Promo Code Used)",
-                                     color="Promo Code Used",
-                                     color_discrete_sequence=["#4f46e5", "#cbd5e1"])
-            fig_promo.update_layout(
-                plot_bgcolor='rgba(0,0,0,0)',
-                paper_bgcolor='rgba(0,0,0,0)',
-                xaxis_title="Promo Code Used", 
-                yaxis_title="Record Count", 
-                showlegend=False
-            )
-            st.plotly_chart(fig_promo, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+        if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
+            df_line = df_real.groupby("Age", as_index=False)["Purchase Amount (USD)"].mean()
+            fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)", markers=True,
+                           title="2. [Line Chart with Markers] Average Purchase Amount Trend by Age",
+                           color_discrete_sequence=["#7c3aed"])
+            fig2.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Age", yaxis_title="Avg Amount (USD)")
+            st.plotly_chart(fig2, use_container_width=True)
 
-    st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown("<h3>2. Data Integrity & Schema Audit</h3>", unsafe_allow_html=True)
-    s_col1, s_col2 = st.columns(2)
-    with s_col1:
-        st.markdown("**Structural Core Information (`df.info()`):**")
-        buffer = io.StringIO()
-        df_real.info(buf=buffer)
-        info_str = buffer.getvalue()
-        st.text_area("", info_str, height=230, label_visibility="collapsed")
-        
-    with s_col2:
-        st.markdown("**Missing Data Null Vector Matrices (`df.isnull().sum()`):**")
-        null_series = df_real.isnull().sum()
-        df_null = pd.DataFrame({"Data Attributes": null_series.index, "Null Vector Sum": null_series.values})
-        st.dataframe(df_null, use_container_width=True, height=230)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="card-container">', unsafe_allow_html=True)
-    st.markdown("<h3>3. Real-time Production Model Performance</h3>", unsafe_allow_html=True)
-    
-    try:
-        X_eval = df_real.drop(columns=["Promo Code Used"], errors="ignore")
-        X_eval = X_eval.reindex(columns=model.feature_names_in_, fill_value=0)
-        
-        y_true_raw = df_real["Promo Code Used"] if "Promo Code Used" in df_real.columns else df_real[df_real.columns[-1]]
-        y_true = le.transform(y_true_raw)
-        y_pred = model.predict(X_eval)
-        
-        acc = accuracy_score(y_true, y_pred)
-        cm = confusion_matrix(y_true, y_pred)
-        report = classification_report(y_true, y_pred, target_names=le.classes_)
-        
-        m_col1, m_col2 = st.columns([1, 1.2])
-        
-        with m_col1:
-            st.metric(label="🎯 Measured Validation Accuracy", value=f"{acc * 100:.2f} %")
-            st.markdown("<br>**Confusion Matrix Heatmap Alignment:**", unsafe_allow_html=True)
-            x_labels = [f"Pred: {c}" for c in le.classes_]
-            y_labels = [f"True: {c}" for c in le.classes_]
+        if "Location" in df_real.columns and "Review Rating" in df_real.columns:
+            fig4 = px.box(df_real, x="Location", y="Review Rating", color=promo_col,
+                          title="4. [Box Plot] Customer Review Rating Distribution by Location",
+                          color_discrete_sequence=["#4f46e5", "#94a3b8"])
+            fig4.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Location", yaxis_title="Review Rating")
+            st.plotly_chart(fig4, use_container_width=True)
             
-            fig_cm = ff.create_annotated_heatmap(
-                z=cm, 
-                x=x_labels, 
-                y=y_labels, 
-                colorscale='Purples',
-                showscale=False
-            )
-            fig_cm.update_layout(
-                margin=dict(t=10, b=10, l=10, r=10), 
-                height=240,
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)'
-            )
-            st.plotly_chart(fig_cm, use_container_width=True)
-            
-        with m_col2:
-            st.markdown("**Production Classification Report Matrix:**")
-            st.markdown(f'<div class="report-text">{report}</div>', unsafe_allow_html=True)
-            
-    except Exception as e:
-        st.warning(f"Tính toán hiệu năng lỗi do bất đối xứng cấu trúc tệp dữ liệu: {str(e)}")
+    st.markdown("---")
+    if "Age" in df_real.columns and "Purchase Amount (USD)" in df_real.columns and "Review Rating" in df_real.columns:
+        fig5 = px.scatter(df_real, x="Age", y="Purchase Amount (USD)", color=promo_col,
+                          size="Review Rating", size_max=15,
+                          title="5. [Bubble Chart] Multidimensional Correlation: Age vs Amount vs Rating",
+                          color_discrete_sequence=["#7c3aed", "#cbd5e1"])
+        fig5.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Age", yaxis_title="Purchase Amount (USD)")
+        st.plotly_chart(fig5, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tab3:
