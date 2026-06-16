@@ -36,13 +36,13 @@ st.markdown(f"""
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.08; 
+    opacity: 0.06; /* Giảm nhẹ độ mờ của ảnh nền xuống 6% để màu dịu hơn */
     z-index: -1;
 }}
 
 .stApp {{
     background: transparent;
-    color: #1e293b;
+    color: #334155; /* Màu chữ xám than dịu nhẹ, không đen gắt */
     font-family: 'Inter', sans-serif;
 }}
 
@@ -57,7 +57,7 @@ section[data-testid="stSidebar"] {{
 }}
 
 h1 {{
-    color: #0f172a !important;
+    color: #1e293b !important; /* Hạ tông chữ tiêu đề chính xuống xám đậm */
     font-weight: 800 !important;
     font-family: 'Inter', sans-serif;
     letter-spacing: -1px;
@@ -65,7 +65,7 @@ h1 {{
 }}
 
 .card-title-h2 {{
-    color: #6366f1 !important;
+    color: #0ea5e9 !important; /* Tiêu đề thẻ chuyển sang màu xanh biển dịu */
     font-weight: 700 !important;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.5px;
@@ -84,22 +84,23 @@ input, .stSelectbox, .stSlider {{
     border-radius: 8px !important;
 }}
 
+/* Nút bấm đổi sang màu Gradient Xanh Mint - Xanh Biển Pastel nhẹ nhàng */
 .stButton > button {{
-    background: linear-gradient(135deg, #6366f1, #a855f7);
+    background: linear-gradient(135deg, #4ade80, #0ea5e9);
     color: #ffffff !important;
     border-radius: 8px;
     padding: 0.7rem 2rem;
     font-weight: 600;
     border: none;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
     transition: all 0.3s ease;
     width: 100%;
 }}
 
 .stButton > button:hover {{
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.25);
+    background: linear-gradient(135deg, #22c55e, #0284c7);
 }}
 
 .stTabs [data-baseweb="tab-list"] {{
@@ -122,21 +123,22 @@ input, .stSelectbox, .stSlider {{
 }}
 
 .stTabs [data-baseweb="tab"]:hover {{
-    color: #6366f1;
+    color: #0ea5e9;
     background-color: rgba(255, 255, 255, 0.5);
 }}
 
 .stTabs [aria-selected="true"] {{
     background-color: #ffffff !important;
-    color: #6366f1 !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    color: #0ea5e9 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
 }}
 
 div[data-testid="stMetricValue"] {{
     font-weight: 700 !important;
-    color: #6366f1 !important;
+    color: #0ea5e9 !important;
 }}
 
+/* Thông báo kết quả dùng tông màu nhạt pastel dịu mắt */
 div[data-testid="stSuccessMessage"], div[data-testid="stErrorMessage"] {{
     border-radius: 10px;
     border: 1px solid transparent;
@@ -145,19 +147,19 @@ div[data-testid="stSuccessMessage"], div[data-testid="stErrorMessage"] {{
 }}
 
 div[data-testid="stSuccessMessage"] {{
-    background-color: #f5f3ff !important;
-    border-color: #ddd6fe !important;
-    color: #6d28d9 !important;
+    background-color: #f0fdf4 !important; /* Xanh lá siêu nhạt */
+    border-color: #dcfce7 !important;
+    color: #166534 !important;
 }}
 
 div[data-testid="stErrorMessage"] {{
-    background-color: #fef2f2 !important;
-    border-color: #fecaca !important;
+    background-color: #fef2f2 !important; /* Đỏ hồng siêu nhạt */
+    border-color: #fee2e2 !important;
     color: #991b1b !important;
 }}
 
 .card-container {{
-    background: rgba(255, 255, 255, 0.9); 
+    background: rgba(255, 255, 255, 0.92); /* Tăng nhẹ độ đặc nền trắng để chữ hiển thị tinh tế, rõ ràng hơn */
     backdrop-filter: blur(12px);
     border: 1px solid rgba(226, 232, 240, 0.8);
     border-radius: 16px;
@@ -266,8 +268,8 @@ with tab2:
     
     promo_col = "Promo Code Used" if "Promo Code Used" in df_real.columns else df_real.columns[-1]
     
-    # Định nghĩa cấu hình màu sắc tương phản cố định cho thuộc tính Promo Code Used
-    custom_colors = {"Yes": "#22c55e", "No": "#ef4444", 1: "#22c55e", 0: "#ef4444"}
+    # THAY ĐỔI TẠI ĐÂY: Sử dụng màu Xanh lá xám nhạt (Sage) và Hồng đất nhạt (Soft Rose) để biểu đồ cực dịu mắt
+    custom_colors = {"Yes": "#86efac", "No": "#fca5a5", 1: "#86efac", 0: "#fca5a5"}
     
     g_col1, g_col2 = st.columns(2)
     
@@ -281,7 +283,7 @@ with tab2:
         if "Category" in df_real.columns and "Purchase Amount (USD)" in df_real.columns:
             fig3 = px.pie(df_real, names="Category", values="Purchase Amount (USD)", hole=0.4,
                           title="3. Revenue Contribution Share by Product Category",
-                          color_discrete_sequence=px.colors.sequential.Agsunset)
+                          color_discrete_sequence=px.colors.sequential.Mint) # Chuyển biểu đồ tròn sang dải màu Mint bạc hà nhạt
             fig3.update_layout(paper_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig3, use_container_width=True)
 
@@ -290,7 +292,7 @@ with tab2:
             df_line = df_real.groupby("Age", as_index=False)["Purchase Amount (USD)"].mean()
             fig2 = px.line(df_line, x="Age", y="Purchase Amount (USD)", markers=True,
                            title="2. Average Purchase Amount Trend by Age",
-                           color_discrete_sequence=["#a855f7"])
+                           color_discrete_sequence=["#38bdf8"]) # Màu đường kẻ đổi thành xanh Sky nhạt
             fig2.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Age", yaxis_title="Avg Amount (USD)")
             st.plotly_chart(fig2, use_container_width=True)
 
