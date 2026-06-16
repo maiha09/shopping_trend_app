@@ -12,6 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Hàm mã hóa ảnh cục bộ sang Base64 để nhúng vào CSS làm hình nền ổn định
 def get_base64_image(image_path):
     if os.path.exists(image_path):
         with open(image_path, "rb") as img_file:
@@ -20,10 +21,14 @@ def get_base64_image(image_path):
 
 img_base64 = get_base64_image("images.jpg")
 
+# =========================================================================
+# ĐẠI TU TOÀN BỘ GIAO DIỆN (CSS) - ĐỒNG BỘ PASTEL & LÀM NỔI BẬT KHỐI CHỨC NĂNG
+# =========================================================================
 st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&display=swap');
 
+/* Tạo lớp nền mờ sử dụng file ảnh images.jpg */
 .stApp::before {{
     content: "";
     position: fixed;
@@ -49,31 +54,37 @@ st.markdown(f"""
     padding: 2.5rem 4rem;
 }}
 
+/* -------------------------------------------------------------------------
+   SIDEBAR BÊN TRÁI - NỀN TRẮNG PHÁT SÁNG, CHỮ ĐẬM RÕ NÉT KHÔNG BỊ CHÌM
+   ------------------------------------------------------------------------- */
 section[data-testid="stSidebar"] {{
-    background: rgba(255, 255, 255, 0.96) !important;
+    background: rgba(255, 255, 255, 0.96) !important; /* Tăng độ mờ nền để chữ nổi lên hoàn toàn */
     backdrop-filter: blur(20px);
     border-right: 1px solid #cbd5e1;
     box-shadow: 4px 0 24px rgba(15, 23, 42, 0.08);
     padding: 1.5rem 0.5rem;
 }}
 
+/* Tiêu đề chính của Sidebar */
 section[data-testid="stSidebar"] .stMarkdown h2 {{
-    color: #0f172a !important;
+    color: #0f172a !important; /* Chữ đen đậm rõ ràng */
     font-weight: 800 !important;
     letter-spacing: -0.5px;
-    border-bottom: 3px solid #4ade80;
+    border-bottom: 3px solid #4ade80; /* Đường gạch màu Pastel Xanh Mint */
     padding-bottom: 8px;
     margin-bottom: 1.5rem !important;
 }}
 
+/* Làm nổi bật nhãn tiêu đề của các ô nhập dữ liệu (Cột chữ và Cột số) */
 div[data-testid="stWidgetLabel"] p {{
     font-weight: 700 !important;
-    color: #0f172a !important;
+    color: #0f172a !important; /* Đổi sang màu tối hơn để tăng tương phản */
     font-size: 0.92rem !important;
 }}
 
+/* Tinh chỉnh thiết kế cho các hộp lựa chọn Selectbox / Dropdown input */
 .stSelectbox div[data-baseweb="select"] {{
-    border: 1px solid #a1a1aa !important;
+    border: 1px solid #a1a1aa !important; /* Viền xám đậm rõ nét */
     border-radius: 8px !important;
     background-color: #ffffff !important;
     transition: all 0.2s ease;
@@ -84,6 +95,7 @@ div[data-testid="stWidgetLabel"] p {{
     box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.15) !important;
 }}
 
+/* Định dạng các khối Expander trong Sidebar để tạo cấu trúc lớp nổi bật */
 section[data-testid="stSidebar"] div[data-testid="stExpander"] {{
     background-color: #ffffff !important;
     border: 1px solid #e2e8f0 !important;
@@ -92,6 +104,7 @@ section[data-testid="stSidebar"] div[data-testid="stExpander"] {{
     margin-bottom: 0.75rem !important;
 }}
 
+/* Thanh trượt Slider màu Pastel Xanh Biển nổi bật */
 div[data-testid="stSlider"] div[role="slider"] {{
     background-color: #0ea5e9 !important;
     border: 2px solid #ffffff !important;
@@ -101,6 +114,9 @@ div[data-testid="stSlider"] div[data-track="true"] > div {{
     background: #0ea5e9 !important;
 }}
 
+/* -------------------------------------------------------------------------
+   NỘI DUNG CHÍNH (MAIN DASHBOARD) - KHỐI CARD CONTAINER NỔI BẬT
+   ------------------------------------------------------------------------- */
 h1 {{
     color: #0f172a !important; 
     font-weight: 800 !important;
@@ -109,7 +125,7 @@ h1 {{
 }}
 
 .card-container {{
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.95); /* Tăng tương phản khối trên màn hình chính */
     backdrop-filter: blur(16px);
     border: 1px solid rgba(226, 232, 240, 0.9);
     border-radius: 16px;
@@ -119,7 +135,7 @@ h1 {{
 }}
 
 .card-title-h2 {{
-    color: #0ea5e9 !important;
+    color: #0ea5e9 !important; /* Xanh biển Pastel làm điểm nhấn tiêu đề card */
     font-weight: 800 !important;
     font-size: 1.45rem;
     letter-spacing: -0.5px;
@@ -127,6 +143,7 @@ h1 {{
     margin-bottom: 0.75rem !important;
 }}
 
+/* KPI Metrics blocks tinh tế */
 div[data-testid="stMetric"] {{
     background: #f8fafc;
     border: 1px solid #e2e8f0;
@@ -138,6 +155,7 @@ div[data-testid="stMetricValue"] {{
     color: #0ea5e9 !important;
 }}
 
+/* Nút bấm Gradient Xanh Mint đến Xanh Biển Pastel */
 .stButton > button {{
     background: linear-gradient(135deg, #4ade80, #0ea5e9);
     color: #ffffff !important;
@@ -157,6 +175,7 @@ div[data-testid="stMetricValue"] {{
     background: linear-gradient(135deg, #22c55e, #0284c7);
 }}
 
+/* Hệ thống Navigation Tabs phẳng, cao cấp */
 .stTabs [data-baseweb="tab-list"] {{
     gap: 8px;
     background-color: rgba(226, 232, 240, 0.7);
@@ -225,9 +244,11 @@ model, le = load_models()
 df_real = load_real_data()
 df_real = df_real.drop(columns=["Customer ID"], errors="ignore")
 
+# Tiêu đề trung tâm thanh lịch
 st.markdown("<h1 style='text-align: center; margin-top: 1rem;'>🛍️ Shopping Trends & Predictive Intelligence</h1>", unsafe_allow_html=True)
 st.markdown("<p style='color: #64748b; font-size: 1.1rem; margin-top: -0.5rem; margin-bottom: 2.5rem; text-align: center;'>Advanced Machine Learning Pipeline & Consumer Behavior Dashboard</p>", unsafe_allow_html=True)
 
+# SIDEBAR: Quy hoạch thành các hộp khối trắng nổi bật, độ tương phản chữ cao
 st.sidebar.header("📝 Customer Attributes")
 
 with st.sidebar.expander("👤 1. Demographics Base", expanded=True):
@@ -243,7 +264,7 @@ with st.sidebar.expander("📦 2. Product & Cart Basket", expanded=True):
     season = st.selectbox("Season", ["Spring", "Summer", "Fall", "Winter"])
 
 with st.sidebar.expander("💳 3. Transaction & History", expanded=True):
-    purchase_amount = st.slider("Purchase Amount (USD)", 20, 100, 50)
+    purchase_amount = st.sidebar.slider("Purchase Amount (USD)", 20, 100, 50) if "purchase_amount" not in locals() else st.slider("Purchase Amount (USD)", 20, 100, 50)
     review = st.slider("Review Rating", 1.0, 5.0, 3.5)
     previous_purchases = st.slider("Previous Purchases", 0, 50, 14)
     discount = st.selectbox("Discount Applied", ["Yes", "No"])
@@ -252,6 +273,7 @@ with st.sidebar.expander("💳 3. Transaction & History", expanded=True):
     payment_method = st.selectbox("Payment Method", sorted(df_real["Payment Method"].unique() if "Payment Method" in df_real.columns else ["Credit Card", "Cash", "PayPal", "Venmo"]))
     frequency_of_purchases = st.selectbox("Frequency of Purchases", sorted(df_real["Frequency of Purchases"].unique() if "Frequency of Purchases" in df_real.columns else ["Weekly", "Monthly", "Quarterly", "Annually"]))
 
+# Cơ chế xử lý định dạng DataFrame chuẩn hóa từ dữ liệu gốc (isnan error fix)
 input_data = df_real.head(1).copy()
 input_data.at[0, "Age"] = int(age)
 input_data.at[0, "Gender"] = str(gender)
@@ -288,6 +310,7 @@ tab1, tab2, tab3 = st.tabs([
 ])
 
 with tab1:
+    # Thẻ Tóm tắt phiên trực tiếp (Live Session Summary) nổi bật
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="card-title-h2">📊 Active Session Matrix</div>', unsafe_allow_html=True)
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
@@ -297,6 +320,7 @@ with tab1:
     kpi4.metric("Loyalty Baseline", f"{previous_purchases} Trx")
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # Thẻ Lõi xử lý mô hình dự đoán AI
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="card-title-h2">🎯 AI Promo Code Prediction Inference</div>', unsafe_allow_html=True)
     st.markdown("<p style='color: #64748b;'>Configure customer attributes in the sidebar panel and click below to process predictive analytics.</p>", unsafe_allow_html=True)
@@ -327,6 +351,8 @@ with tab2:
     st.markdown("<p style='color: #64748b; margin-bottom: 2rem;'>Detailed exploratory analysis over five distinct high-aesthetic graphical styles.</p>", unsafe_allow_html=True)
     
     promo_col = "Promo Code Used" if "Promo Code Used" in df_real.columns else df_real.columns[-1]
+    
+    # Bảng màu Pastel đồng bộ: Xanh Biển (#0ea5e9) và Xám Bạc nhạt (#cbd5e1)
     custom_colors = {"Yes": "#0ea5e9", "No": "#cbd5e1", 1: "#0ea5e9", 0: "#cbd5e1"}
     
     g_col1, g_col2 = st.columns(2)
@@ -335,6 +361,7 @@ with tab2:
         fig1 = px.histogram(df_real, x="Gender", color=promo_col, barmode="stack",
                             title="1. Promo Code Count Distribution by Gender",
                             color_discrete_map=custom_colors)
+        # Đã FIX LỖI: Xóa hoàn toàn tham số barcode=None không tồn tại khỏi hàm update_layout
         fig1.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', xaxis_title="Gender", yaxis_title="Count")
         st.plotly_chart(fig1, use_container_width=True)
         
