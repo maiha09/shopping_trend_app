@@ -15,7 +15,7 @@ st.markdown("""
 /* Toàn bộ nền ứng dụng dạng Gradient mượt mà */
 .stApp {
     background: linear-gradient(135deg, #8ec5fc 0%, #e4efe9 100%);
-    background-image: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+    background-image: linear-gradient(135deg, #8ec5fc 0%, #8ec5fc 100%);
     color: #1f2937;
     font-family: 'Segoe UI', sans-serif;
 }
