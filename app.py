@@ -1,3 +1,10 @@
+Dưới đây là toàn bộ mã nguồn Streamlit hoàn chỉnh đã được cập nhật đoạn CSS mới.
+
+Sự thay đổi này tập trung vào việc định cấu hình chuyên sâu cho vùng header ([data-testid="stHeader"]), ép font chữ Share lên độ đậm tối đa (font-weight: 800), đồng thời xử lý triệt để các tag SVG (như icon cây bút, logo GitHub, nút ba chấm) để chúng luôn giữ màu xanh Indigo (#1e3a8a) đậm, rõ nét, không còn bị lỗi chuyển sang màu trắng mờ gây ẩn icon như trước.
+
+Bạn chỉ cần sao chép toàn bộ đoạn mã này và ghi đè vào file ứng dụng của mình:
+
+Python
 import base64
 import os
 import joblib
@@ -52,46 +59,58 @@ header, [data-testid="stHeader"], .stHeader {{
     background: transparent !important;
 }}
 
-/* LÀM NỔI BẬT NÚT SHARE VÀ CÁC ICON GÓC PHẢI */
+/* ==================== TỐI ƯU ĐẬM CHỮ VÀ ICON HEADER ==================== */
+
+/* 1. Ép chữ 'Share' phải cực đậm và đổi màu chuẩn */
 header [data-testid="stHeader"] button p, 
 header button p,
 .stHeader button p {{
-    color: #1e3a8a !important; /* Chữ Share màu xanh Indigo đậm sắc nét */
-    font-weight: 700 !important;
+    color: #1e3a8a !important; 
+    font-weight: 800 !important; /* Tăng độ đậm lên mức tối đa */
+    font-size: 16px !important;
 }}
 
+/* 2. Ép TẤT CẢ các icon (kể cả GitHub, Edit, Star) về màu Indigo đậm */
 header svg, 
 [data-testid="stHeader"] svg,
-header a {{
-    fill: #1e3a8a !important;   /* Đổi màu icon SVG */
-    color: #1e3a8a !important;  /* Đổi màu icon liên kết */
+header a,
+header a svg,
+[data-testid="stHeader"] a svg {{
+    fill: #1e3a8a !important;   /* Fix lỗi mất màu của icon SVG */
+    color: #1e3a8a !important;  /* Fix lỗi mất màu của icon dạng text/link */
+    opacity: 1 !important;      /* Loại bỏ hoàn toàn độ mờ ẩn */
 }}
 
+/* 3. Định dạng lại phần khung nền kính mờ phía sau từng nút */
 header button, 
 header a[href], 
 [data-testid="stHeader"] button {{
-    background-color: rgba(255, 255, 255, 0.6) !important; /* Lót nền kính mờ trắng để nổi bật trên ảnh */
-    border-radius: 8px !important;
-    padding: 4px 10px !important;
-    border: 1px solid rgba(79, 70, 229, 0.15) !important;
+    background-color: rgba(255, 255, 255, 0.75) !important; /* Tăng độ đục lót nền giúp chữ/icon nổi bật */
+    border-radius: 10px !important;                          /* Bo tròn góc hiện đại */
+    padding: 6px 12px !important;                            /* Nới rộng khoảng cách nút bớt ngột ngạt */
+    border: 1.5px solid rgba(30, 58, 138, 0.2) !important;   /* Viền xanh Indigo siêu mỏng tinh tế */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     transition: all 0.2s ease !important;
 }}
 
-/* Hiệu ứng Hover tương tác cho nút bấm trên Header */
+/* 4. Hiệu ứng Hover tương tác sinh động khi di chuột vào nút */
 header button:hover, 
 header a[href]:hover, 
 [data-testid="stHeader"] button:hover {{
-    background-color: #4f46e5 !important; /* Chuyển màu Indigo hiện đại khi rà chuột */
+    background-color: #4f46e5 !important; /* Đổi sang nền Indigo sáng */
+    border-color: #4f46e5 !important;
     transform: translateY(-1px);
-    box-shadow: 0px 4px 10px rgba(79, 70, 229, 0.2);
 }}
 
-header button:hover p, [data-testid="stHeader"] button:hover p {{
+header button:hover p, 
+[data-testid="stHeader"] button:hover p,
+header button:hover svg, 
+header a:hover svg,
+[data-testid="stHeader"] button:hover svg {{
     color: #ffffff !important;
-}}
-header button:hover svg, header a:hover svg {{
     fill: #ffffff !important;
-    color: #ffffff !important;
 }}
 
 .block-container {{
