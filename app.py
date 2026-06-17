@@ -402,10 +402,10 @@ df_real = load_real_data()
 st.markdown(
     """
     <div style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
-        <h1 style="font-size: 52px !important; font-weight: 800 !important; color: #1e1b4b !important; line-height: 1.2; margin-bottom: 10px;">
+        <h1 style="font-size: 100px !important; font-weight: 800 !important; color: #1e1b4b !important; line-height: 1.2; margin-bottom: 10px;">
             🛍️ Customer Insights & Promo Code Dashboard
         </h1>
-        <h3 style="font-size: 24px !important; font-weight: 700 !important; color: #4f46e5 !important; margin-top: 0px; margin-bottom: 25px; text-align: center;">
+        <h3 style="font-size: 70px !important; font-weight: 700 !important; color: #4f46e5 !important; margin-top: 0px; margin-bottom: 25px; text-align: center;">
             🚀 AI-powered prediction and data visualization system
         </h3>
     </div>
