@@ -250,8 +250,8 @@ div[data-testid="stSuccessMessage"] {{
     background: rgba(34, 197, 94, 0.65) !important;
     border-left: 5px solid #22c55e;
     border-radius: 12px;
-    color: white !important; /* Chữ xanh lục siêu đậm để dễ đọc trên nền tối */
-    font-weight: 800 !important; /* Ép chữ siêu dày */
+    color: white !important;
+    font-weight: 800 !important;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15); /* Tạo bóng đổ nhẹ tách biệt khỏi ảnh nền */
 }}
 
