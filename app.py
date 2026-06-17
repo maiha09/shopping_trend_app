@@ -6,7 +6,8 @@ import plotly.express as px
 st.set_page_config(
     page_title="Promo Code Prediction",
     page_icon="🛍️",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"   # <-- thêm dòng này
 )
 
 st.markdown("""
