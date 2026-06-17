@@ -2,48 +2,55 @@ import streamlit as st
 import pandas as pd
 import joblib
 import plotly.express as px
+import base64
 
 st.set_page_config(
     page_title="Promo Code Prediction",
     page_icon="🛍️",
     layout="wide",
-    initial_sidebar_state="expanded"   # <-- thêm dòng này
+    initial_sidebar_state="expanded"
 )
 
-st.markdown("""
+def get_base64_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
+
+img = get_base64_image("data/images.jpg")
+
+st.markdown(f"""
 <style>
 
-
 /* NỀN ỨNG DỤNG CHÍNH */
-.stApp {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e3edff 100%);
+.stApp {{
+    background:
+        linear-gradient(
+            rgba(255,255,255,0.82),
+            rgba(255,255,255,0.82)
+        ),
+        url("data:image/jpg;base64,{img}");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
     color: #111827;
     font-family: 'Segoe UI', sans-serif;
-}
+}}
 
-.block-container {
+.block-container {{
     padding: 2rem 3rem;
-}
+}}
 
 /* THANH ĐIỀU HƯỚNG SIDEBAR */
-section[data-testid="stSidebar"] {
+section[data-testid="stSidebar"] {{
     background: linear-gradient(135deg, #f8f9fa 0%, #e3edff 100%) !important;
-    box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.05);
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
-}
+    box-shadow: 4px 0px 15px rgba(0,0,0,0.05);
+    border-right: 1px solid rgba(0,0,0,0.05);
+}}
 
-section[data-testid="stSidebar"] .stMarkdown, 
-section[data-testid="stSidebar"] label, 
-section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] h2,
-section[data-testid="stSidebar"] h3,
-section[data-testid="stSidebar"] span {
-    color: #111827 !important;
-    font-weight: 600 !important;
-}
-
-/* THIẾT KẾ RIÊNG CHO TIÊU ĐỀ SIDEBAR ĐẸP MẮT */
-.sidebar-header {
+/* THIẾT KẾ RIÊNG CHO TIÊU ĐỀ SIDEBAR */
+.sidebar-header {{
     font-size: 1.2rem;
     font-weight: 800;
     color: #312e81;
@@ -51,30 +58,21 @@ section[data-testid="stSidebar"] span {
     letter-spacing: 1.2px;
     padding: 0.75rem 0;
     margin-bottom: 1.5rem;
-    border-bottom: 2px solid rgba(79, 70, 229, 0.15);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-}
+    border-bottom: 2px solid rgba(79,70,229,0.15);
+}}
 
-.sidebar-header::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 50px;
-    height: 2px;
-    background: linear-gradient(90deg, #4f46e5, #3b82f6);
-}
-
-/* CĂN GIỮA TIÊU ĐỀ */
-h1 {
+h1 {{
     color: #1e1b4b !important;
     font-weight: 800;
-    letter-spacing: 0.5px;
     text-align: center;
-}
+}}
+
+input, .stSelectbox, .stSlider {{
+    border-radius: 12px !important;
+}}
+
+</style>
+""", unsafe_allow_html=True)
 
 h3 {
     color: #1e3a8a !important;
