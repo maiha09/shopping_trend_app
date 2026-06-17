@@ -22,7 +22,8 @@ img = ""
 if os.path.exists("data/images.jpg"):
     img = get_base64_image("data/images.jpg")
 
-# ===== CUSTOM CSS =====
+@st.cache_resource
+def load_models():
 st.markdown(f"""
 <style>
 
