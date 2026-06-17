@@ -46,17 +46,28 @@ section[data-testid="stSidebar"] span {
 
 /* THIẾT KẾ RIÊNG CHO TIÊU ĐỀ SIDEBAR ĐẸP MẮT */
 .sidebar-header {
-    font-size: 1.15rem;
-    font-weight: 800 !important;
-    color: #1e1b4b !important;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #312e81;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid rgba(79, 70, 229, 0.15);
+    letter-spacing: 1.2px;
+    padding: 0.75rem 0;
     margin-bottom: 1.5rem;
+    border-bottom: 2px solid rgba(79, 70, 229, 0.15);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    position: relative;
+}
+
+.sidebar-header::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, #4f46e5, #3b82f6);
 }
 
 /* CĂN GIỮA TIÊU ĐỀ */
