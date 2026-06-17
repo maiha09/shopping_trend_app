@@ -1,10 +1,3 @@
-Dưới đây là toàn bộ mã nguồn Streamlit hoàn chỉnh đã được cập nhật đoạn CSS mới.
-
-Sự thay đổi này tập trung vào việc định cấu hình chuyên sâu cho vùng header ([data-testid="stHeader"]), ép font chữ Share lên độ đậm tối đa (font-weight: 800), đồng thời xử lý triệt để các tag SVG (như icon cây bút, logo GitHub, nút ba chấm) để chúng luôn giữ màu xanh Indigo (#1e3a8a) đậm, rõ nét, không còn bị lỗi chuyển sang màu trắng mờ gây ẩn icon như trước.
-
-Bạn chỉ cần sao chép toàn bộ đoạn mã này và ghi đè vào file ứng dụng của mình:
-
-Python
 import base64
 import os
 import joblib
