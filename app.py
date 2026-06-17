@@ -376,16 +376,20 @@ model, le = load_models()
 df_real = load_real_data()
 
 # TIÊU ĐỀ ỨNG DỤNG
-st.markdown("# 🛍️ Customer Insights & Promo Code Dashboard")
-st.markdown("### 🚀 AI-powered prediction and data visualization system")
+# Thêm cặp dấu ** để làm đậm nội dung tiêu đề chính và phụ
+st.markdown("# **🛍️ Customer Insights & Promo Code Dashboard**")
+st.markdown("### **🚀 AI-powered prediction and data visualization system**")
 st.markdown("---")
 
 # SIDEBAR GIAO DIỆN KHÁCH HÀNG
+# Sử dụng font-weight: 800 trong HTML để ép chữ tiêu đề sidebar đậm lên
 st.sidebar.markdown(
-    '<div class="sidebar-header">📋 Customer Information</div>',
+    '<div class="sidebar-header" style="font-weight: 800 !important;">📋 Customer Information</div>',
     unsafe_allow_html=True,
 )
 
+# Các cấu hình ô nhập liệu bên dưới giữ nguyên, chúng sẽ tự động đậm 
+# nếu bạn đã áp dụng bộ CSS ở "Cách 1"
 age = st.sidebar.slider("Age", 18, 70, 25)
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
 category = st.sidebar.selectbox(
