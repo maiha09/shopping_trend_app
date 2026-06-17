@@ -100,8 +100,8 @@ header button,
 header a[href], 
 [data-testid="stHeader"] button {{
     background-color: rgba(255, 255, 255, 0.75) !important; 
-    border-radius: 10px !important;                                                                                                                                                                                                                                                                                                                             
-    padding: 6px 12px !important;                                                                                                                                                                                                                                                                                                                               
+    border-radius: 10px !important;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+    padding: 6px 12px !important;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
     border: 1.5px solid rgba(30, 58, 138, 0.2) !important;   
     display: inline-flex !important;
     align-items: center !important;
@@ -245,20 +245,24 @@ div[data-baseweb="select"] svg {{
     color: white !important;
 }}
 
+/* 📍 ĐÃ CẬP NHẬT: KHỐI THÔNG BÁO THÀNH CÔNG ĐẬM RÕ NÉT */
 div[data-testid="stSuccessMessage"] {{
-    background: rgba(34, 197, 94, 0.15);
+    background: rgba(34, 197, 94, 0.45) !important; /* Tăng độ đậm nền xanh từ 0.15 lên 0.45 */
     border-left: 5px solid #22c55e;
     border-radius: 12px;
-    color: #14532d;
-    font-weight: 700 !important;
+    color: #052e16 !important; /* Chữ xanh lục siêu đậm để dễ đọc trên nền tối */
+    font-weight: 800 !important; /* Ép chữ siêu dày */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15); /* Tạo bóng đổ nhẹ tách biệt khỏi ảnh nền */
 }}
 
+/* 📍 ĐÃ CẬP NHẬT: KHỐI THÔNG BÁO LỖI ĐẬM ĐỒNG BỘ */
 div[data-testid="stErrorMessage"] {{
-    background: rgba(239, 68, 68, 0.12);
+    background: rgba(239, 68, 68, 0.45) !important; /* Tăng độ đậm nền đỏ từ 0.12 lên 0.45 */
     border-left: 5px solid #ef4444;
     border-radius: 12px;
-    color: #7f1d1d;
-    font-weight: 700 !important;
+    color: #450a0a !important; /* Chữ đỏ đậm để nổi bật */
+    font-weight: 800 !important;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
 }}
 
 details {{
@@ -423,7 +427,7 @@ def load_real_data():
 model, le = load_models()
 df_real = load_real_data()
 
-# ===== 🛠️ PHẦN TIÊU ĐỀ ĐÃ ĐƯỢC ÉP CLASS RIÊNG - CHẮC CHẮN SẼ TO VÀ ĐẸP MẮT =====
+# ===== TIÊU ĐỀ =====
 st.markdown(
     """
     <div style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
