@@ -47,18 +47,24 @@ st.markdown(
     
     /* Ép tất cả chữ của app to và đậm lên */
     font-weight: 700 !important;
-    font-size: 25px !important;
+    font-size: 18px !important;
 }}
 
 /* ÉP CHỮ CỦA MARKDOWN, LABELS, SPAN TOÀN GIAO DIỆN PHẢI ĐẬM */
+/* ĐÃ LOẠI BỎ .stApp .stMarkdown ĐỂ TRÁNH ĐÈ CỠ CHỮ TIÊU ĐỀ CHÍNH */
 .stApp p, 
 .stApp span, 
 .stApp label,
-.stApp .stMarkdown,
 .stApp div[data-testid="stWidgetLabel"] p {{
     font-weight: 700 !important;
     font-size: 17px !important;
     color: #111827 !important;
+}}
+
+/* Đảm bảo văn bản thông thường trong markdown vẫn rõ ràng nhưng không đè h1/h3 */
+.stApp .stMarkdown p {{
+    font-weight: 700 !important;
+    font-size: 17px !important;
 }}
 
 /* XỬ LÝ THANH ĐEN ĐỈNH MÀN HÌNH - BIẾN THÀNH TRONG SUỐT */
@@ -94,8 +100,8 @@ header button,
 header a[href], 
 [data-testid="stHeader"] button {{
     background-color: rgba(255, 255, 255, 0.75) !important; 
-    border-radius: 10px !important;                                                                                     
-    padding: 6px 12px !important;                                                                                       
+    border-radius: 10px !important;                                                                                                                                                                                                                                                                                                                             
+    padding: 6px 12px !important;                                                                                                                                                                                                                                                                                                                               
     border: 1.5px solid rgba(30, 58, 138, 0.2) !important;   
     display: inline-flex !important;
     align-items: center !important;
@@ -174,6 +180,25 @@ h3 {{
     text-align: center;
     margin-bottom: 2rem;
     font-size: 20px !important; /* Tăng cỡ chữ tiêu đề phụ h3 */
+}}
+
+/* CẤU HÌNH ĐÈ ĐẶC BIỆT CHO PHẦN TIÊU ĐỀ CHÍNH KHÔNG BỊ GIỚI HẠN KÍCH THƯỚC */
+.main-dashboard-title {{
+    font-size: 46px !important;
+    font-weight: 800 !important;
+    color: #1e1b4b !important;
+    line-height: 1.2 !important;
+    margin-bottom: 10px !important;
+    text-align: center !important;
+}}
+
+.main-dashboard-subtitle {{
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #4f46e5 !important;
+    margin-top: 0px !important;
+    margin-bottom: 25px !important;
+    text-align: center !important;
 }}
 
 /* ==================== CHỮA LỖI Ô ĐEN & LÀM NỔI BẬT CHỮ LỰA CHỌN ==================== */
@@ -398,16 +423,16 @@ def load_real_data():
 model, le = load_models()
 df_real = load_real_data()
 
-# ===== 🛠️ PHẦN TIÊU ĐỀ ỨNG DỤNG ĐÃ ĐƯỢC CHỈNH TO VÀ NỔI BẬT KHÔNG BỊ PHÔNG NỀN ĐÈ MỜ =====
+# ===== 🛠️ PHẦN TIÊU ĐỀ ĐÃ ĐƯỢC ÉP CLASS RIÊNG - CHẮC CHẮN SẼ TO VÀ ĐẸP MẮT =====
 st.markdown(
     """
     <div style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
-        <h1 style="font-size: 100px !important; font-weight: 800 !important; color: #1e1b4b !important; line-height: 1.2; margin-bottom: 10px;">
+        <div class="main-dashboard-title">
             🛍️ Customer Insights & Promo Code Dashboard
-        </h1>
-        <h3 style="font-size: 70px !important; font-weight: 700 !important; color: #4f46e5 !important; margin-top: 0px; margin-bottom: 25px; text-align: center;">
+        </div>
+        <div class="main-dashboard-subtitle">
             🚀 AI-powered prediction and data visualization system
-        </h3>
+        </div>
     </div>
     """,
     unsafe_allow_html=True
