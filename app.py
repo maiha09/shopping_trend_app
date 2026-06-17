@@ -564,8 +564,8 @@ with tab2:
 
     def customize_chart_theme(fig):
         fig.update_layout(
-            paper_bgcolor="rgba(255, 255, 255, 0.4)",  # Trong suốt hơn để nổi ảnh nền dưới chart
-            plot_bgcolor="rgba(255, 255, 255, 0.1)",
+            paper_bgcolor="rgba(255, 255, 255, 0.6)",  # Trong suốt hơn để nổi ảnh nền dưới chart
+            plot_bgcolor="rgba(255, 255, 255, 0.2)",
             font=dict(color="#111827", family="Segoe UI", size=13),
             margin=dict(l=40, r=40, t=65, b=40),
             title_font=dict(size=16, color="#1e3a8a"),
