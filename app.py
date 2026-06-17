@@ -23,7 +23,7 @@ img = ""
 if os.path.exists("data/Hinh-1.jpg"):
     img = get_base64_image("data/Hinh-1.jpg")
 
-# ===== CSS CẤU HÌNH GIAO DIỆN =====
+# ===== CSS CẤU HÌNH GIAO DIỆN (ĐÃ TỐI ƯU ĐỘ NỔI BẬT SIDEBAR VÀ CHỮ) =====
 st.markdown(
     f"""
 <style>
@@ -32,8 +32,8 @@ st.markdown(
 .stApp {{
     background:
         linear-gradient(
-            rgba(255,255,255,0.82),
-            rgba(255,255,255,0.82)
+            rgba(255,255,255,0.85),
+            rgba(255,255,255,0.85)
         ),
         url("data:image/jpg;base64,{img}");
 
@@ -50,34 +50,44 @@ st.markdown(
     padding: 2rem 3rem;
 }}
 
-/* SIDEBAR */
+/* SIDEBAR - GIÚP ẢNH NỀN ĐI XUYÊN QUA NHƯNG LÀM MỜ ĐỂ NỔI BẬT ĐỐI TƯỢNG */
 section[data-testid="stSidebar"] {{
-    background: rgba(255,255,255,0.88) !important;
-    backdrop-filter: blur(10px);
-    box-shadow: 4px 0px 15px rgba(0,0,0,0.05);
-    border-right: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255, 255, 255, 0.45) !important; /* Giảm độ đục để lộ ảnh nền phía sau rõ hơn */
+    backdrop-filter: blur(12px) saturate(180%); /* Tạo hiệu ứng kính mờ cao cấp, tăng bão hòa màu của ảnh */
+    box-shadow: 5px 0px 25px rgba(0,0,0,0.15);
+    border-right: 1px solid rgba(255,255,255,0.4);
 }}
 
+/* TĂNG CƯỜNG ĐỘ ĐẬM VÀ ĐỘ TƯƠNG PHẢN CHO TẤT CẢ CHỮ TRÊN SIDEBAR (KHÔNG BỊ MỜ) */
 section[data-testid="stSidebar"] .stMarkdown,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] h2,
 section[data-testid="stSidebar"] h3,
-section[data-testid="stSidebar"] span {{
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] p code {{
+    color: #030712 !important; /* Màu đen carbon sâu nhất, chống lóa tốt trên mọi loại nền ảnh */
+    font-weight: 700 !important; /* Tăng từ 600 lên 700 (Bold hoàn toàn) */
+    text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8); /* Tạo một lớp viền trắng nhẹ phía sau chữ để tách chữ ra khỏi ảnh nền */
+}}
+
+/* ĐỊNH DẠNG LẠI CHỮ TRONG CÁC Ô SELECTBOX & SLIDER ĐỂ RÕ NÉT HƠN */
+section[data-testid="stSidebar"] div[data-baseweb="select"] div {{
     color: #111827 !important;
     font-weight: 600 !important;
 }}
 
 /* SIDEBAR HEADER */
 .sidebar-header {{
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: 800;
-    color: #312e81;
+    color: #1e1b4b !important; /* Đổi sang màu Indigo đậm */
     text-transform: uppercase;
     letter-spacing: 1.2px;
     padding: 0.75rem 0;
     margin-bottom: 1.5rem;
-    border-bottom: 2px solid rgba(79,70,229,0.15);
+    border-bottom: 3px solid #4f46e5;
+    text-shadow: none !important;
 }}
 
 /* TITLES */
@@ -103,6 +113,7 @@ input,
 .stSelectbox,
 .stSlider {{
     border-radius: 12px !important;
+    background-color: rgba(255, 255, 255, 0.9) !important; /* Làm nền các ô nhập liệu trắng rõ để dễ đọc thông số */
 }}
 
 .stButton > button {{
