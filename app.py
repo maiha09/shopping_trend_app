@@ -100,8 +100,8 @@ header button,
 header a[href], 
 [data-testid="stHeader"] button {{
     background-color: rgba(255, 255, 255, 0.75) !important; 
-    border-radius: 10px !important;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-    padding: 6px 12px !important;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+    border-radius: 10px !important;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+    padding: 6px 12px !important;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
     border: 1.5px solid rgba(30, 58, 138, 0.2) !important;   
     display: inline-flex !important;
     align-items: center !important;
@@ -245,24 +245,26 @@ div[data-baseweb="select"] svg {{
     color: white !important;
 }}
 
-/* 📍 ĐÃ CẬP NHẬT: KHỐI THÔNG BÁO THÀNH CÔNG ĐẬM RÕ NÉT */
+/* 📍 ĐÃ CẬP NHẬT: KHỐI THÔNG BÁO THÀNH CÔNG ĐẬM ĐẶC VÀ NỔI BẬT */
 div[data-testid="stSuccessMessage"] {{
-    background: rgba(34, 197, 94, 0.65) !important;
-    border-left: 5px solid #22c55e;
+    background: rgba(22, 163, 74, 0.85) !important; /* Đổi sang màu xanh lục đậm hơn và tăng độ đặc lên 0.85 */
+    border-left: 6px solid #15803d; /* Viền trái xanh lá cây sẫm cứng cáp */
     border-radius: 12px;
-    color: white !important;
-    font-weight: 800 !important;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15); /* Tạo bóng đổ nhẹ tách biệt khỏi ảnh nền */
+    color: #ffffff !important; /* Chuyển chữ thành màu trắng để tương phản hoàn hảo trên nền đậm */
+    font-weight: 800 !important; 
+    backdrop-filter: blur(6px) !important; /* Tạo hiệu ứng mờ kính để lu mờ các chi tiết rườm rà phía dưới ảnh nền */
+    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.25); /* Đổ bóng mạnh rõ rệt để khối nổi lên trên giao diện */
 }}
 
 /* 📍 ĐÃ CẬP NHẬT: KHỐI THÔNG BÁO LỖI ĐẬM ĐỒNG BỘ */
 div[data-testid="stErrorMessage"] {{
-    background: rgba(239, 68, 68, 0.45) !important; /* Tăng độ đậm nền đỏ từ 0.12 lên 0.45 */
-    border-left: 5px solid #ef4444;
+    background: rgba(220, 38, 38, 0.85) !important; /* Đổi sang tông đỏ sẫm đặc với độ mờ 0.85 */
+    border-left: 6px solid #991b1b; /* Viền trái đỏ sẫm */
     border-radius: 12px;
-    color: #450a0a !important; /* Chữ đỏ đậm để nổi bật */
+    color: #ffffff !important; /* Chuyển chữ thành màu trắng để đảm bảo dễ đọc */
     font-weight: 800 !important;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(6px) !important;
+    box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.25);
 }}
 
 details {{
