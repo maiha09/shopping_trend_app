@@ -23,7 +23,7 @@ img = ""
 if os.path.exists("data/Hinh-1.jpg"):
     img = get_base64_image("data/Hinh-1.jpg")
 
-# ===== CSS CẤU HÌNH GIAO DIỆN =====
+# ===== CSS CẤU HÌNH GIAO DIỆN CHUẨN UI/UX =====
 st.markdown(
     f"""
 <style>
@@ -32,7 +32,7 @@ st.markdown(
 .stApp {{
     background:
         linear-gradient(
-            rgba(255,255,255,0.5), /* Giảm từ 0.85 xuống 0.5 để ảnh nổi lên */
+            rgba(255,255,255,0.5), 
             rgba(255,255,255,0.5)
         ),
         url("data:image/jpg;base64,{img}");
@@ -44,8 +44,6 @@ st.markdown(
 
     color: #111827;
     font-family: 'Segoe UI', sans-serif;
-    
-    /* Ép tất cả chữ của app to và đậm lên */
     font-weight: 700 !important;
     font-size: 18px !important;
 }}
@@ -67,9 +65,7 @@ header, [data-testid="stHeader"], .stHeader {{
     background: transparent !important;
 }}
 
-/* ==================== TỐI ƯU ĐẬM CHỮ VÀ ICON HEADER ==================== */
-
-/* 1. Ép chữ 'Share' phải cực đậm và đổi màu chuẩn */
+/* ==================== ĐỊNH DẠNG NÚT SHARE VÀ ICON GÓC PHẢI TRÊN ==================== */
 header [data-testid="stHeader"] button p, 
 header button p,
 .stHeader button p {{
@@ -78,7 +74,6 @@ header button p,
     font-size: 16px !important;
 }}
 
-/* 2. Ép TẤT CẢ các icon (kể cả GitHub, Edit, Star) về màu Indigo đậm */
 header svg, 
 [data-testid="stHeader"] svg,
 header a,
@@ -89,21 +84,19 @@ header a svg,
     opacity: 1 !important;      
 }}
 
-/* 3. Định dạng lại phần khung nền kính mờ phía sau từng nút */
 header button, 
 header a[href], 
 [data-testid="stHeader"] button {{
-    background-color: rgba(255, 255, 255, 0.75) !important; 
-    border-radius: 10px !important;                                                    
-    padding: 6px 12px !important;                                                       
-    border: 1.5px solid rgba(30, 58, 138, 0.2) !important;   
+    background-color: rgba(255, 255, 255, 0.9) !important; 
+    border-radius: 10px !important;                                                                                     
+    padding: 6px 12px !important;                                                                                       
+    border: 1.5px solid rgba(30, 58, 138, 0.3) !important;   
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     transition: all 0.2s ease !important;
 }}
 
-/* 4. Hiệu ứng Hover tương tác sinh động khi di chuột vào nút */
 header button:hover, 
 header a[href]:hover, 
 [data-testid="stHeader"] button:hover {{
@@ -126,15 +119,14 @@ header a:hover svg,
     padding-top: 1rem !important; 
 }}
 
-/* SIDEBAR - GIÚP ẢNH NỀN ĐI XUYÊN QUA NHƯNG LÀM MỜ ĐỂ NỔI BẬT ĐỐI TƯỢNG */
+/* SIDEBAR - LÀM NỀN SÁNG VÀ ĐỤC HƠN ĐỂ PHÂN TÁCH KHỎI BACKGROUND MỜ */
 section[data-testid="stSidebar"] {{
-    background: rgba(255, 255, 255, 0.25) !important; /* Giảm để nhìn xuyên qua ảnh rõ hơn */
-    backdrop-filter: blur(8px) saturate(180%);
+    background: rgba(248, 250, 252, 0.45) !important; 
+    backdrop-filter: blur(12px) saturate(180%);
     box-shadow: 5px 0px 25px rgba(0,0,0,0.15);
     border-right: 1px solid rgba(255,255,255,0.4);
 }}
 
-/* TĂNG CƯỜNG ĐỘ ĐẬM VÀ ĐỘ TƯƠNG PHẢN CHO TẤT CẢ CHỮ TRÊN SIDEBAR */
 section[data-testid="stSidebar"] .stMarkdown,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] p,
@@ -145,7 +137,7 @@ section[data-testid="stSidebar"] p code {{
     color: #030712 !important;
     font-weight: 700 !important;
     font-size: 16px !important;
-    text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8);
+    text-shadow: none !important;
 }}
 
 /* SIDEBAR HEADER */
@@ -165,14 +157,14 @@ section[data-testid="stSidebar"] p code {{
 h1 {{
     color: #1e1b4b !important;
     font-weight: 800 !important;
-    font-size: 40px !important; /* Tăng cỡ chữ tiêu đề chính */
+    font-size: 40px !important;
     text-align: center;
 }}
 
 h2 {{
     color: #1e3a8a !important;
     font-weight: 700 !important;
-    font-size: 28px !important; /* Tăng cỡ chữ tiêu đề phụ h2 */
+    font-size: 28px !important;
 }}
 
 h3 {{
@@ -180,40 +172,80 @@ h3 {{
     font-weight: 700 !important;
     text-align: center;
     margin-bottom: 2rem;
-    font-size: 20px !important; /* Tăng cỡ chữ tiêu đề phụ h3 */
+    font-size: 20px !important;
 }}
 
-/* ==================== CHỮA LỖI Ô ĐEN & LÀM NỔI BẬT CHỮ LỰA CHỌN ==================== */
+/* ==================== 🛠️ SỬA LỖI Ô ĐEN & LÀM NỔI BẬT SELECTBOX CHỮ SIÊU NỔI ==================== */
 input,
 .stSelectbox,
 div[data-baseweb="select"],
 div[data-baseweb="select"] > div {{
+    background-color: rgba(255, 255, 255, 0.98) !important; /* Độ đục 98% che hoàn toàn nền đen mờ */
     border-radius: 12px !important;
-    background-color: rgba(255, 255, 255, 0.95) !important; /* Xóa màu đen, chuyển sang trắng sáng */
-    border: 1.5px solid rgba(30, 58, 138, 0.2) !important; /* Thêm viền mỏng lịch sự */
+    border: 2px solid #1e3a8a !important;                 /* Viền xanh Indigo đậm tạo khối nổi bật */
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.08) !important; /* Đổ bóng nhẹ tạo độ sâu */
 }}
 
-/* Ép chữ bên trong ô input / selectbox phải luôn ĐẬM và có MÀU TỐI dễ đọc */
+/* Ép text hiển thị và text tùy chọn trong Selectbox có màu ĐEN TỐI ĐA, cực kỳ nét */
 div[data-baseweb="select"] div,
 div[data-baseweb="select"] span,
-input {{
-    color: #111827 !important; 
-    font-weight: 700 !important;
+input,
+div[data-baseweb="popover"] li {{
+    color: #030712 !important; 
+    font-weight: 800 !important; /* Nâng độ đậm lên mức siêu đậm */
     font-size: 16px !important;
 }}
 
-/* Đổi màu mũi tên xổ xuống góc phải ô chọn thành xanh Indigo */
+/* Giữ màu cho mũi tên góc phải của ô chọn */
 div[data-baseweb="select"] svg {{
     fill: #1e3a8a !important;
 }}
 
+/* ==================== 🛠️ LÀM NỔI BẬT THANH TABS ĐIỀU HƯỚNG ==================== */
+div[data-testid="stTabBar"] {{
+    background-color: rgba(255, 255, 255, 0.92) !important; /* Lót lớp nền trắng đục giúp Tab nổi hẳn lên ảnh */
+    border-radius: 14px !important;
+    padding: 6px 18px !important;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid rgba(30, 58, 138, 0.1) !important;
+    margin-bottom: 1.5rem !important;
+}}
+
+button[data-baseweb="tab"] {{
+    font-size: 18px !important;
+    font-weight: 800 !important; /* Chữ Tab đậm lên */
+    color: #4b5563 !important;
+}}
+
+button[data-baseweb="tab"][aria-selected="true"] {{
+    color: #1e3a8a !important;
+    border-bottom: 3.5px solid #1e3a8a !important; /* Gạch dưới dày và rõ nét hơn */
+}}
+
+/* ==================== 🛠️ LÀM NỔI BẬT KHUNG EXPANDER DỮ LIỆU ==================== */
+details {{
+    background: rgba(255, 255, 255, 0.95) !important; /* Nền trắng sữa đục bảo vệ nội dung bên trong */
+    border-radius: 14px !important;
+    padding: 0.75rem !important;
+    border: 2px solid rgba(30, 58, 138, 0.2) !important;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.06) !important;
+}}
+
+/* Làm nổi bật tiêu đề "View Processed Input Data" */
+details summary span p {{
+    font-weight: 800 !important;
+    color: #1e3a8a !important;
+    font-size: 17px !important;
+}}
+
+/* BUTTONS */
 .stButton > button {{
     background: linear-gradient(90deg, #4f46e5, #3b82f6);
     color: white !important;
     border-radius: 14px;
     padding: 0.6rem 1.4rem;
-    font-weight: 700 !important; /* Làm đậm chữ nút Predict */
-    font-size: 18px !important;   /* Làm to chữ nút Predict */
+    font-weight: 700 !important;
+    font-size: 18px !important;  
     border: none;
     box-shadow: 0px 4px 12px rgba(79, 70, 229, 0.2);
     width: 100%;
@@ -227,38 +259,21 @@ div[data-baseweb="select"] svg {{
     color: white !important;
 }}
 
+/* NOTIFICATION MESSAGES */
 div[data-testid="stSuccessMessage"] {{
-    background: rgba(34, 197, 94, 0.15);
-    border-left: 5px solid #22c55e;
+    background: rgba(34, 197, 94, 0.2); /* Tăng độ hiển thị màu nền thông báo */
+    border-left: 6px solid #22c55e;
     border-radius: 12px;
     color: #14532d;
-    font-weight: 700 !important;
+    font-weight: 800 !important;
 }}
 
 div[data-testid="stErrorMessage"] {{
-    background: rgba(239, 68, 68, 0.12);
-    border-left: 5px solid #ef4444;
+    background: rgba(239, 68, 68, 0.18);
+    border-left: 6px solid #ef4444;
     border-radius: 12px;
     color: #7f1d1d;
-    font-weight: 700 !important;
-}}
-
-details {{
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 12px;
-    padding: 0.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-}}
-
-button[data-baseweb="tab"] {{
-    font-size: 18px !important; /* Làm to chữ các Tabs */
-    font-weight: 700 !important;
-    color: #4b5563 !important;
-}}
-
-button[data-baseweb="tab"][aria-selected="true"] {{
-    color: #1e3a8a !important;
-    border-bottom-color: #1e3a8a !important;
+    font-weight: 800 !important;
 }}
 
 /* KHỐI METRIC */
@@ -270,7 +285,7 @@ button[data-baseweb="tab"][aria-selected="true"] {{
 }}
 
 .custom-metric-card {{
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(79, 70, 229, 0.15);
     border-radius: 16px;
     padding: 1.5rem;
@@ -296,7 +311,7 @@ button[data-baseweb="tab"][aria-selected="true"] {{
 }}
 
 .metric-value {{
-    font-size: 2.2rem; /* Tăng kích cỡ số liệu tổng quan */
+    font-size: 2.2rem;
     font-weight: 800;
     color: #1e3a8a;
     background: linear-gradient(90deg, #1e3a8a, #4f46e5);
@@ -529,7 +544,7 @@ with tab2:
 
     def customize_chart_theme(fig):
         fig.update_layout(
-            paper_bgcolor="rgba(255, 255, 255, 0.4)",  # Trong suốt hơn để nổi ảnh nền dưới chart
+            paper_bgcolor="rgba(255, 255, 255, 0.4)",  
             plot_bgcolor="rgba(255, 255, 255, 0.1)",
             font=dict(color="#111827", family="Segoe UI", size=13),
             margin=dict(l=40, r=40, t=65, b=40),
