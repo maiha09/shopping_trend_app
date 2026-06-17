@@ -94,8 +94,8 @@ header button,
 header a[href], 
 [data-testid="stHeader"] button {{
     background-color: rgba(255, 255, 255, 0.75) !important; 
-    border-radius: 10px !important;                                                    
-    padding: 6px 12px !important;                                                       
+    border-radius: 10px !important;                                                                                     
+    padding: 6px 12px !important;                                                                                       
     border: 1.5px solid rgba(30, 58, 138, 0.2) !important;   
     display: inline-flex !important;
     align-items: center !important;
@@ -162,13 +162,6 @@ section[data-testid="stSidebar"] p code {{
 }}
 
 /* TITLES */
-h1 {{
-    color: #1e1b4b !important;
-    font-weight: 800 !important;
-    font-size: 40px !important; /* Tăng cỡ chữ tiêu đề chính */
-    text-align: center;
-}}
-
 h2 {{
     color: #1e3a8a !important;
     font-weight: 700 !important;
@@ -405,9 +398,20 @@ def load_real_data():
 model, le = load_models()
 df_real = load_real_data()
 
-# TIÊU ĐỀ ỨNG DỤNG
-st.markdown("# 🛍️ Customer Insights & Promo Code Dashboard")
-st.markdown("### 🚀 AI-powered prediction and data visualization system")
+# ===== 🛠️ PHẦN TIÊU ĐỀ ỨNG DỤNG ĐÃ ĐƯỢC CHỈNH TO VÀ NỔI BẬT KHÔNG BỊ PHÔNG NỀN ĐÈ MỜ =====
+st.markdown(
+    """
+    <div style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
+        <h1 style="font-size: 52px !important; font-weight: 800 !important; color: #1e1b4b !important; line-height: 1.2; margin-bottom: 10px;">
+            🛍️ Customer Insights & Promo Code Dashboard
+        </h1>
+        <h3 style="font-size: 24px !important; font-weight: 700 !important; color: #4f46e5 !important; margin-top: 0px; margin-bottom: 25px; text-align: center;">
+            🚀 AI-powered prediction and data visualization system
+        </h3>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 st.markdown("---")
 
 # SIDEBAR GIAO DIỆN KHÁCH HÀNG
