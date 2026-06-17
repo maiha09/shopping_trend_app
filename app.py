@@ -46,8 +46,8 @@ st.markdown(
     font-family: 'Segoe UI', sans-serif;
     
     /* Ép tất cả chữ của app to và đậm lên */
-    font-weight: 700 !important;
-    font-size: 18px !important;
+    font-weight: 1200 !important;
+    font-size: 30px !important;
 }}
 
 /* ÉP CHỮ CỦA MARKDOWN, LABELS, SPAN TOÀN GIAO DIỆN PHẢI ĐẬM */
@@ -164,14 +164,14 @@ section[data-testid="stSidebar"] p code {{
 /* TITLES */
 h1 {{
     color: #1e1b4b !important;
-    font-weight: 800 !important;
+    font-weight:3000 !important;
     font-size: 40px !important; /* Tăng cỡ chữ tiêu đề chính */
     text-align: center;
 }}
 
 h2 {{
     color: #1e3a8a !important;
-    font-weight: 700 !important;
+    font-weight: 3000!important;
     font-size: 28px !important; /* Tăng cỡ chữ tiêu đề phụ h2 */
 }}
 
