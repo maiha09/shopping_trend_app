@@ -247,10 +247,10 @@ div[data-baseweb="select"] svg {{
 
 /* 📍 ĐÃ CẬP NHẬT: KHỐI THÔNG BÁO THÀNH CÔNG ĐẬM RÕ NÉT */
 div[data-testid="stSuccessMessage"] {{
-    background: rgba(34, 197, 94, 0.45) !important; /* Tăng độ đậm nền xanh từ 0.15 lên 0.45 */
+    background: rgba(34, 197, 94, 0.65) !important;
     border-left: 5px solid #22c55e;
     border-radius: 12px;
-    color: #052e16 !important; /* Chữ xanh lục siêu đậm để dễ đọc trên nền tối */
+    color: white !important; /* Chữ xanh lục siêu đậm để dễ đọc trên nền tối */
     font-weight: 800 !important; /* Ép chữ siêu dày */
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15); /* Tạo bóng đổ nhẹ tách biệt khỏi ảnh nền */
 }}
