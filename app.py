@@ -131,7 +131,7 @@ section[data-testid="stSidebar"] h3,
 section[data-testid="stSidebar"] span,
 section[data-testid="stSidebar"] p code {{
     color: #030712 !important;
-    font-weight: 700 !important;
+    font-weight: 71300 !important;
     text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8);
 }}
 
