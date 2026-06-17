@@ -44,7 +44,7 @@ st.markdown(
 
     color: #111827;
     font-family: 'Segoe UI', sans-serif;
-    font-weight: 700 !important;
+    font-weight: 1200 !important;
     font-size: 18px !important;
 
 }}
