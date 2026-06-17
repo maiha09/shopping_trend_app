@@ -46,13 +46,7 @@ st.markdown(
     font-family: 'Segoe UI', sans-serif;
     font-weight: 700 !important;
     font-size: 18px !important;
-    .stApp p, 
-.stApp span, 
-.stApp label, 
-.stApp .stMarkdown {
-    font-weight: 700 !important;
-    font-size: 18px !important;
-    color: #111827 !important;
+
 }}
 
 /* XỬ LÝ THANH ĐEN ĐỈNH MÀN HÌNH - BIẾN THÀNH TRONG SUỐT */
