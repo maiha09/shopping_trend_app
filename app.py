@@ -20,7 +20,7 @@ def get_base64_image(image_path):
 
 
 img = ""
-if os.path.exists("data/images.jpg"):
+if os.path.exists("data/Hinh-1.jpg"):
     img = get_base64_image("data/Hinh-1.jpg")
 
 # ===== CSS CẤU HÌNH GIAO DIỆN =====
