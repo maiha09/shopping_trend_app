@@ -23,7 +23,7 @@ img = ""
 if os.path.exists("data/Hinh-1.jpg"):
     img = get_base64_image("data/Hinh-1.jpg")
 
-# ===== CSS CẤU HÌNH GIAO DIỆN =====
+
 st.markdown(
     f"""
 <style>
@@ -45,13 +45,12 @@ st.markdown(
     color: #111827;
     font-family: 'Segoe UI', sans-serif;
     
-    /* Ép tất cả chữ của app to và đậm lên */
+   
     font-weight: 700 !important;
     font-size: 18px !important;
 }}
 
-/* ÉP CHỮ CỦA MARKDOWN, LABELS, SPAN TOÀN GIAO DIỆN PHẢI ĐẬM */
-/* ĐÃ LOẠI BỎ .stApp .stMarkdown ĐỂ TRÁNH ĐÈ CỠ CHỮ TIÊU ĐỀ CHÍNH */
+
 .stApp p, 
 .stApp span, 
 .stApp label,
@@ -61,21 +60,19 @@ st.markdown(
     color: #111827 !important;
 }}
 
-/* Đảm bảo văn bản thông thường trong markdown vẫn rõ ràng nhưng không đè h1/h3 */
 .stApp .stMarkdown p {{
     font-weight: 700 !important;
     font-size: 17px !important;
 }}
 
-/* XỬ LÝ THANH ĐEN ĐỈNH MÀN HÌNH - BIẾN THÀNH TRONG SUỐT */
+
 header, [data-testid="stHeader"], .stHeader {{
     background-color: rgba(0, 0, 0, 0) !important;
     background: transparent !important;
 }}
 
-/* ==================== TỐI ƯU ĐẬM CHỮ VÀ ICON HEADER ==================== */
 
-/* 1. Ép chữ 'Share' phải cực đậm và đổi màu chuẩn */
+
 header [data-testid="stHeader"] button p, 
 header button p,
 .stHeader button p {{
@@ -84,7 +81,7 @@ header button p,
     font-size: 16px !important;
 }}
 
-/* 2. Ép TẤT CẢ các icon (kể cả GitHub, Edit, Star) về màu Indigo đậm */
+
 header svg, 
 [data-testid="stHeader"] svg,
 header a,
@@ -95,7 +92,7 @@ header a svg,
     opacity: 1 !important;      
 }}
 
-/* 3. Định dạng lại phần khung nền kính mờ phía sau từng nút */
+
 header button, 
 header a[href], 
 [data-testid="stHeader"] button {{
@@ -109,7 +106,7 @@ header a[href],
     transition: all 0.2s ease !important;
 }}
 
-/* 4. Hiệu ứng Hover tương tác sinh động khi di chuột vào nút */
+
 header button:hover, 
 header a[href]:hover, 
 [data-testid="stHeader"] button:hover {{
@@ -132,7 +129,7 @@ header a:hover svg,
     padding-top: 1rem !important; 
 }}
 
-/* SIDEBAR - GIÚP ẢNH NỀN ĐI XUYÊN QUA NHƯNG LÀM MỜ ĐỂ NỔI BẬT ĐỐI TƯỢNG */
+
 section[data-testid="stSidebar"] {{
     background: rgba(255, 255, 255, 0.25) !important; /* Giảm để nhìn xuyên qua ảnh rõ hơn */
     backdrop-filter: blur(8px) saturate(180%);
@@ -140,7 +137,7 @@ section[data-testid="stSidebar"] {{
     border-right: 1px solid rgba(255,255,255,0.4);
 }}
 
-/* TĂNG CƯỜNG ĐỘ ĐẬM VÀ ĐỘ TƯƠNG PHẢN CHO TẤT CẢ CHỮ TRÊN SIDEBAR */
+
 section[data-testid="stSidebar"] .stMarkdown,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] p,
@@ -154,7 +151,7 @@ section[data-testid="stSidebar"] p code {{
     text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8);
 }}
 
-/* SIDEBAR HEADER */
+
 .sidebar-header {{
     font-size: 1.25rem;
     font-weight: 800;
@@ -167,7 +164,7 @@ section[data-testid="stSidebar"] p code {{
     text-shadow: none !important;
 }}
 
-/* TITLES */
+
 h2 {{
     color: #1e3a8a !important;
     font-weight: 700 !important;
@@ -182,7 +179,7 @@ h3 {{
     font-size: 20px !important; /* Tăng cỡ chữ tiêu đề phụ h3 */
 }}
 
-/* CẤU HÌNH ĐÈ ĐẶC BIỆT CHO PHẦN TIÊU ĐỀ CHÍNH KHÔNG BỊ GIỚI HẠN KÍCH THƯỚC */
+
 .main-dashboard-title {{
     font-size: 46px !important;
     font-weight: 800 !important;
@@ -201,7 +198,7 @@ h3 {{
     text-align: center !important;
 }}
 
-/* ==================== CHỮA LỖI Ô ĐEN & LÀM NỔI BẬT CHỮ LỰA CHỌN ==================== */
+
 input,
 .stSelectbox,
 div[data-baseweb="select"],
@@ -211,7 +208,7 @@ div[data-baseweb="select"] > div {{
     border: 1.5px solid rgba(30, 58, 138, 0.2) !important; /* Thêm viền mỏng lịch sự */
 }}
 
-/* Ép chữ bên trong ô input / selectbox phải luôn ĐẬM và có MÀU TỐI dễ đọc */
+
 div[data-baseweb="select"] div,
 div[data-baseweb="select"] span,
 input {{
@@ -220,7 +217,7 @@ input {{
     font-size: 16px !important;
 }}
 
-/* Đổi màu mũi tên xổ xuống góc phải ô chọn thành xanh Indigo */
+
 div[data-baseweb="select"] svg {{
     fill: #1e3a8a !important;
 }}
@@ -245,7 +242,7 @@ div[data-baseweb="select"] svg {{
     color: white !important;
 }}
 
-/* 📍 ĐÃ CẬP NHẬT: KHỐI THÔNG BÁO THÀNH CÔNG ĐẬM ĐẶC VÀ NỔI BẬT */
+
 div[data-testid="stSuccessMessage"] {{
     background: rgba(22, 163, 74, 0.85) !important; /* Đổi sang màu xanh lục đậm hơn và tăng độ đặc lên 0.85 */
     border-left: 6px solid #15803d; /* Viền trái xanh lá cây sẫm cứng cáp */
@@ -256,7 +253,7 @@ div[data-testid="stSuccessMessage"] {{
     box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.25); /* Đổ bóng mạnh rõ rệt để khối nổi lên trên giao diện */
 }}
 
-/* 📍 ĐÃ CẬP NHẬT: KHỐI THÔNG BÁO LỖI ĐẬM ĐỒNG BỘ */
+
 div[data-testid="stErrorMessage"] {{
     background: rgba(220, 38, 38, 0.85) !important; /* Đổi sang tông đỏ sẫm đặc với độ mờ 0.85 */
     border-left: 6px solid #991b1b; /* Viền trái đỏ sẫm */
@@ -285,7 +282,7 @@ button[data-baseweb="tab"][aria-selected="true"] {{
     border-bottom-color: #1e3a8a !important;
 }}
 
-/* KHỐI METRIC */
+
 .metric-container {{
     display: flex;
     justify-content: space-between;
@@ -333,7 +330,7 @@ button[data-baseweb="tab"][aria-selected="true"] {{
 )
 
 
-# ===== TẢI MÔ HÌNH VÀ DỮ LIỆU =====
+
 @st.cache_resource
 def load_models():
     try:
@@ -429,7 +426,7 @@ def load_real_data():
 model, le = load_models()
 df_real = load_real_data()
 
-# ===== TIÊU ĐỀ =====
+
 st.markdown(
     """
     <div style="text-align: center; margin-top: 10px; margin-bottom: 10px;">
@@ -445,7 +442,7 @@ st.markdown(
 )
 st.markdown("---")
 
-# SIDEBAR GIAO DIỆN KHÁCH HÀNG
+
 st.sidebar.markdown(
     '<div class="sidebar-header">📋 Customer Information</div>',
     unsafe_allow_html=True,
@@ -492,14 +489,14 @@ frequency_of_purchases = st.sidebar.selectbox(
     "Frequency of Purchases", ["Weekly", "Monthly", "Quarterly", "Annually"]
 )
 
-# Xử lý Age Group dựa trên dữ liệu người dùng kéo slider
+
 age_group = pd.cut(
     [age],
     bins=[18, 35, 55, 70, float("inf")],
     labels=["19-35", "36-55", "55-70", "71+"],
 )[0]
 
-# Đóng gói dữ liệu đầu vào
+
 input_data = pd.DataFrame([{
     "Age": age,
     "AgeGroup": age_group,
@@ -520,10 +517,10 @@ input_data = pd.DataFrame([{
     "Frequency of Purchases": frequency_of_purchases,
 }])
 
-# Align các cột theo Model
+
 input_data = input_data.reindex(columns=model.feature_names_in_, fill_value=0)
 
-# KHỞI TẠO TABS
+
 tab1, tab2, tab3 = st.tabs([
     "🎯 Predict Promo Code",
     "📊 Data Visualizations",
