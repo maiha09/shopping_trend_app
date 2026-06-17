@@ -11,10 +11,7 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-header[data-testid="stHeader"] {
-    visibility: hidden;
-    height: 0%;
-}
+
 
 /* NỀN ỨNG DỤNG CHÍNH */
 .stApp {
