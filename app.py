@@ -62,8 +62,8 @@ header [data-testid="stHeader"] button p,
 header button p,
 .stHeader button p {{
     color: #1e3a8a !important; 
-    font-weight: 800 !important; /* Tăng độ đậm lên mức tối đa */
-    font-size: 16px !important;
+    font-weight:1300 !important; /* Tăng độ đậm lên mức tối đa */
+    font-size: 35px !important;
 }}
 
 /* 2. Ép TẤT CẢ các icon (kể cả GitHub, Edit, Star) về màu Indigo đậm */
