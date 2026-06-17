@@ -32,8 +32,8 @@ st.markdown(
 .stApp {{
     background:
         linear-gradient(
-            rgba(255,255,255,0.6), /* Giảm từ 0.85 xuống 0.5 để ảnh nổi lên */
-            rgba(255,255,255,0.6)
+            rgba(255,255,255,0.5), /* Giảm từ 0.85 xuống 0.5 để ảnh nổi lên */
+            rgba(255,255,255,0.5)
         ),
         url("data:image/jpg;base64,{img}");
 
