@@ -23,7 +23,7 @@ img = ""
 if os.path.exists("data/Hinh-1.jpg"):
     img = get_base64_image("data/Hinh-1.jpg")
 
-# ===== CSS CẤU HÌNH GIAO DIỆN (ĐÃ TỐI ƯU ĐỘ NỔI BẬT SIDEBAR VÀ CHỮ) =====
+# ===== CSS CẤU HÌNH GIAO DIỆN =====
 st.markdown(
     f"""
 <style>
@@ -46,19 +46,68 @@ st.markdown(
     font-family: 'Segoe UI', sans-serif;
 }}
 
+/* XỬ LÝ THANH ĐEN ĐỈNH MÀN HÌNH - BIẾN THÀNH TRONG SUỐT */
+header, [data-testid="stHeader"], .stHeader {{
+    background-color: rgba(0, 0, 0, 0) !important;
+    background: transparent !important;
+}}
+
+/* LÀM NỔI BẬT NÚT SHARE VÀ CÁC ICON GÓC PHẢI */
+header [data-testid="stHeader"] button p, 
+header button p,
+.stHeader button p {{
+    color: #1e3a8a !important; /* Chữ Share màu xanh Indigo đậm sắc nét */
+    font-weight: 700 !important;
+}}
+
+header svg, 
+[data-testid="stHeader"] svg,
+header a {{
+    fill: #1e3a8a !important;   /* Đổi màu icon SVG */
+    color: #1e3a8a !important;  /* Đổi màu icon liên kết */
+}}
+
+header button, 
+header a[href], 
+[data-testid="stHeader"] button {{
+    background-color: rgba(255, 255, 255, 0.6) !important; /* Lót nền kính mờ trắng để nổi bật trên ảnh */
+    border-radius: 8px !important;
+    padding: 4px 10px !important;
+    border: 1px solid rgba(79, 70, 229, 0.15) !important;
+    transition: all 0.2s ease !important;
+}}
+
+/* Hiệu ứng Hover tương tác cho nút bấm trên Header */
+header button:hover, 
+header a[href]:hover, 
+[data-testid="stHeader"] button:hover {{
+    background-color: #4f46e5 !important; /* Chuyển màu Indigo hiện đại khi rà chuột */
+    transform: translateY(-1px);
+    box-shadow: 0px 4px 10px rgba(79, 70, 229, 0.2);
+}}
+
+header button:hover p, [data-testid="stHeader"] button:hover p {{
+    color: #ffffff !important;
+}}
+header button:hover svg, header a:hover svg {{
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}}
+
 .block-container {{
     padding: 2rem 3rem;
+    padding-top: 1rem !important; /* Đẩy nhẹ nội dung sát lên trên cho đẹp */
 }}
 
 /* SIDEBAR - GIÚP ẢNH NỀN ĐI XUYÊN QUA NHƯNG LÀM MỜ ĐỂ NỔI BẬT ĐỐI TƯỢNG */
 section[data-testid="stSidebar"] {{
-    background: rgba(255, 255, 255, 0.45) !important; /* Giảm độ đục để lộ ảnh nền phía sau rõ hơn */
-    backdrop-filter: blur(12px) saturate(180%); /* Tạo hiệu ứng kính mờ cao cấp, tăng bão hòa màu của ảnh */
+    background: rgba(255, 255, 255, 0.45) !important;
+    backdrop-filter: blur(12px) saturate(180%);
     box-shadow: 5px 0px 25px rgba(0,0,0,0.15);
     border-right: 1px solid rgba(255,255,255,0.4);
 }}
 
-/* TĂNG CƯỜNG ĐỘ ĐẬM VÀ ĐỘ TƯƠNG PHẢN CHO TẤT CẢ CHỮ TRÊN SIDEBAR (KHÔNG BỊ MỜ) */
+/* TĂNG CƯỜNG ĐỘ ĐẬM VÀ ĐỘ TƯƠNG PHẢN CHO TẤT CẢ CHỮ TRÊN SIDEBAR */
 section[data-testid="stSidebar"] .stMarkdown,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] p,
@@ -66,12 +115,11 @@ section[data-testid="stSidebar"] h2,
 section[data-testid="stSidebar"] h3,
 section[data-testid="stSidebar"] span,
 section[data-testid="stSidebar"] p code {{
-    color: #030712 !important; /* Màu đen carbon sâu nhất, chống lóa tốt trên mọi loại nền ảnh */
-    font-weight: 700 !important; /* Tăng từ 600 lên 700 (Bold hoàn toàn) */
-    text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8); /* Tạo một lớp viền trắng nhẹ phía sau chữ để tách chữ ra khỏi ảnh nền */
+    color: #030712 !important;
+    font-weight: 700 !important;
+    text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8);
 }}
 
-/* ĐỊNH DẠNG LẠI CHỮ TRONG CÁC Ô SELECTBOX & SLIDER ĐỂ RÕ NÉT HƠN */
 section[data-testid="stSidebar"] div[data-baseweb="select"] div {{
     color: #111827 !important;
     font-weight: 600 !important;
@@ -81,7 +129,7 @@ section[data-testid="stSidebar"] div[data-baseweb="select"] div {{
 .sidebar-header {{
     font-size: 1.25rem;
     font-weight: 800;
-    color: #1e1b4b !important; /* Đổi sang màu Indigo đậm */
+    color: #1e1b4b !important;
     text-transform: uppercase;
     letter-spacing: 1.2px;
     padding: 0.75rem 0;
@@ -113,7 +161,7 @@ input,
 .stSelectbox,
 .stSlider {{
     border-radius: 12px !important;
-    background-color: rgba(255, 255, 255, 0.9) !important; /* Làm nền các ô nhập liệu trắng rõ để dễ đọc thông số */
+    background-color: rgba(255, 255, 255, 0.9) !important;
 }}
 
 .stButton > button {{
