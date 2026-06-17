@@ -32,8 +32,8 @@ st.markdown(
 .stApp {{
     background:
         linear-gradient(
-            rgba(255,255,255,0.85),
-            rgba(255,255,255,0.85)
+            rgba(255,255,255,0.5), /* Giảm từ 0.85 xuống 0.5 để ảnh nổi lên */
+            rgba(255,255,255,0.5)
         ),
         url("data:image/jpg;base64,{img}");
 
@@ -44,6 +44,21 @@ st.markdown(
 
     color: #111827;
     font-family: 'Segoe UI', sans-serif;
+    
+    /* Ép tất cả chữ của app to và đậm lên */
+    font-weight: 700 !important;
+    font-size: 18px !important;
+}}
+
+/* ÉP CHỮ CỦA MARKDOWN, LABELS, SPAN TOÀN GIAO DIỆN PHẢI ĐẬM */
+.stApp p, 
+.stApp span, 
+.stApp label,
+.stApp .stMarkdown,
+.stApp div[data-testid="stWidgetLabel"] p {{
+    font-weight: 700 !important;
+    font-size: 17px !important;
+    color: #111827 !important;
 }}
 
 /* XỬ LÝ THANH ĐEN ĐỈNH MÀN HÌNH - BIẾN THÀNH TRONG SUỐT */
@@ -59,7 +74,7 @@ header [data-testid="stHeader"] button p,
 header button p,
 .stHeader button p {{
     color: #1e3a8a !important; 
-    font-weight: 800 !important; /* Tăng độ đậm lên mức tối đa */
+    font-weight: 800 !important; 
     font-size: 16px !important;
 }}
 
@@ -69,19 +84,19 @@ header svg,
 header a,
 header a svg,
 [data-testid="stHeader"] a svg {{
-    fill: #1e3a8a !important;   /* Fix lỗi mất màu của icon SVG */
-    color: #1e3a8a !important;  /* Fix lỗi mất màu của icon dạng text/link */
-    opacity: 1 !important;      /* Loại bỏ hoàn toàn độ mờ ẩn */
+    fill: #1e3a8a !important;   
+    color: #1e3a8a !important;  
+    opacity: 1 !important;      
 }}
 
 /* 3. Định dạng lại phần khung nền kính mờ phía sau từng nút */
 header button, 
 header a[href], 
 [data-testid="stHeader"] button {{
-    background-color: rgba(255, 255, 255, 0.75) !important; /* Tăng độ đục lót nền giúp chữ/icon nổi bật */
-    border-radius: 10px !important;                          /* Bo tròn góc hiện đại */
-    padding: 6px 12px !important;                            /* Nới rộng khoảng cách nút bớt ngột ngạt */
-    border: 1.5px solid rgba(30, 58, 138, 0.2) !important;   /* Viền xanh Indigo siêu mỏng tinh tế */
+    background-color: rgba(255, 255, 255, 0.75) !important; 
+    border-radius: 10px !important;                                                    
+    padding: 6px 12px !important;                                                       
+    border: 1.5px solid rgba(30, 58, 138, 0.2) !important;   
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -92,7 +107,7 @@ header a[href],
 header button:hover, 
 header a[href]:hover, 
 [data-testid="stHeader"] button:hover {{
-    background-color: #4f46e5 !important; /* Đổi sang nền Indigo sáng */
+    background-color: #4f46e5 !important; 
     border-color: #4f46e5 !important;
     transform: translateY(-1px);
 }}
@@ -108,13 +123,13 @@ header a:hover svg,
 
 .block-container {{
     padding: 2rem 3rem;
-    padding-top: 1rem !important; /* Đẩy nhẹ nội dung sát lên trên cho đẹp */
+    padding-top: 1rem !important; 
 }}
 
 /* SIDEBAR - GIÚP ẢNH NỀN ĐI XUYÊN QUA NHƯNG LÀM MỜ ĐỂ NỔI BẬT ĐỐI TƯỢNG */
 section[data-testid="stSidebar"] {{
-    background: rgba(255, 255, 255, 0.45) !important;
-    backdrop-filter: blur(12px) saturate(180%);
+    background: rgba(255, 255, 255, 0.25) !important; /* Giảm để nhìn xuyên qua ảnh rõ hơn */
+    backdrop-filter: blur(8px) saturate(180%);
     box-shadow: 5px 0px 25px rgba(0,0,0,0.15);
     border-right: 1px solid rgba(255,255,255,0.4);
 }}
@@ -129,12 +144,8 @@ section[data-testid="stSidebar"] span,
 section[data-testid="stSidebar"] p code {{
     color: #030712 !important;
     font-weight: 700 !important;
+    font-size: 16px !important;
     text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8);
-}}
-
-section[data-testid="stSidebar"] div[data-baseweb="select"] div {{
-    color: #111827 !important;
-    font-weight: 600 !important;
 }}
 
 /* SIDEBAR HEADER */
@@ -153,13 +164,15 @@ section[data-testid="stSidebar"] div[data-baseweb="select"] div {{
 /* TITLES */
 h1 {{
     color: #1e1b4b !important;
-    font-weight: 800;
+    font-weight: 800 !important;
+    font-size: 40px !important; /* Tăng cỡ chữ tiêu đề chính */
     text-align: center;
 }}
 
 h2 {{
     color: #1e3a8a !important;
     font-weight: 700 !important;
+    font-size: 28px !important; /* Tăng cỡ chữ tiêu đề phụ h2 */
 }}
 
 h3 {{
@@ -167,13 +180,31 @@ h3 {{
     font-weight: 700 !important;
     text-align: center;
     margin-bottom: 2rem;
+    font-size: 20px !important; /* Tăng cỡ chữ tiêu đề phụ h3 */
 }}
 
+/* ==================== CHỮA LỖI Ô ĐEN & LÀM NỔI BẬT CHỮ LỰA CHỌN ==================== */
 input,
 .stSelectbox,
-.stSlider {{
+div[data-baseweb="select"],
+div[data-baseweb="select"] > div {{
     border-radius: 12px !important;
-    background-color: rgba(255, 255, 255, 0.9) !important;
+    background-color: rgba(255, 255, 255, 0.95) !important; /* Xóa màu đen, chuyển sang trắng sáng */
+    border: 1.5px solid rgba(30, 58, 138, 0.2) !important; /* Thêm viền mỏng lịch sự */
+}}
+
+/* Ép chữ bên trong ô input / selectbox phải luôn ĐẬM và có MÀU TỐI dễ đọc */
+div[data-baseweb="select"] div,
+div[data-baseweb="select"] span,
+input {{
+    color: #111827 !important; 
+    font-weight: 700 !important;
+    font-size: 16px !important;
+}}
+
+/* Đổi màu mũi tên xổ xuống góc phải ô chọn thành xanh Indigo */
+div[data-baseweb="select"] svg {{
+    fill: #1e3a8a !important;
 }}
 
 .stButton > button {{
@@ -181,7 +212,8 @@ input,
     color: white !important;
     border-radius: 14px;
     padding: 0.6rem 1.4rem;
-    font-weight: 600;
+    font-weight: 700 !important; /* Làm đậm chữ nút Predict */
+    font-size: 18px !important;   /* Làm to chữ nút Predict */
     border: none;
     box-shadow: 0px 4px 12px rgba(79, 70, 229, 0.2);
     width: 100%;
@@ -200,7 +232,7 @@ div[data-testid="stSuccessMessage"] {{
     border-left: 5px solid #22c55e;
     border-radius: 12px;
     color: #14532d;
-    font-weight: 600;
+    font-weight: 700 !important;
 }}
 
 div[data-testid="stErrorMessage"] {{
@@ -208,7 +240,7 @@ div[data-testid="stErrorMessage"] {{
     border-left: 5px solid #ef4444;
     border-radius: 12px;
     color: #7f1d1d;
-    font-weight: 600;
+    font-weight: 700 !important;
 }}
 
 details {{
@@ -219,7 +251,7 @@ details {{
 }}
 
 button[data-baseweb="tab"] {{
-    font-size: 16px !important;
+    font-size: 18px !important; /* Làm to chữ các Tabs */
     font-weight: 700 !important;
     color: #4b5563 !important;
 }}
@@ -255,7 +287,7 @@ button[data-baseweb="tab"][aria-selected="true"] {{
 }}
 
 .metric-label {{
-    font-size: 0.95rem;
+    font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     color: #4b5563;
@@ -264,7 +296,7 @@ button[data-baseweb="tab"][aria-selected="true"] {{
 }}
 
 .metric-value {{
-    font-size: 2rem;
+    font-size: 2.2rem; /* Tăng kích cỡ số liệu tổng quan */
     font-weight: 800;
     color: #1e3a8a;
     background: linear-gradient(90deg, #1e3a8a, #4f46e5);
@@ -295,6 +327,7 @@ def load_models():
                 "Purchase Amount (USD)",
                 "Review Rating",
                 "Location",
+                "Identity_Card",
             ]
 
             def predict(self, df):
@@ -496,11 +529,11 @@ with tab2:
 
     def customize_chart_theme(fig):
         fig.update_layout(
-            paper_bgcolor="rgba(255, 255, 255, 0.75)",
-            plot_bgcolor="rgba(255, 255, 255, 0.4)",
-            font=dict(color="#111827", family="Segoe UI", size=12),
+            paper_bgcolor="rgba(255, 255, 255, 0.4)",  # Trong suốt hơn để nổi ảnh nền dưới chart
+            plot_bgcolor="rgba(255, 255, 255, 0.1)",
+            font=dict(color="#111827", family="Segoe UI", size=13),
             margin=dict(l=40, r=40, t=65, b=40),
-            title_font=dict(size=15, color="#1e3a8a"),
+            title_font=dict(size=16, color="#1e3a8a"),
             legend=dict(font=dict(color="#111827")),
             xaxis=dict(
                 gridcolor="rgba(17, 24, 39, 0.12)",
