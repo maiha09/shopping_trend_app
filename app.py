@@ -47,7 +47,7 @@ st.markdown(
     
     /* Ép tất cả chữ của app to và đậm lên */
     font-weight: 700 !important;
-    font-size: 18px !important;
+    font-size: 25px !important;
 }}
 
 /* ÉP CHỮ CỦA MARKDOWN, LABELS, SPAN TOÀN GIAO DIỆN PHẢI ĐẬM */
