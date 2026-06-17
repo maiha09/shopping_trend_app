@@ -3,6 +3,7 @@ import pandas as pd
 import joblib
 import plotly.express as px
 import base64
+import os
 
 st.set_page_config(
     page_title="Promo Code Prediction",
@@ -11,12 +12,17 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# ===== LOAD BACKGROUND IMAGE =====
 def get_base64_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
 
-img = get_base64_image("data/images.jpg")
+img = ""
 
+if os.path.exists("data/images.jpg"):
+    img = get_base64_image("data/images.jpg")
+
+# ===== CUSTOM CSS =====
 st.markdown(f"""
 <style>
 
@@ -42,14 +48,25 @@ st.markdown(f"""
     padding: 2rem 3rem;
 }}
 
-/* THANH ĐIỀU HƯỚNG SIDEBAR */
+/* SIDEBAR */
 section[data-testid="stSidebar"] {{
-    background: linear-gradient(135deg, #f8f9fa 0%, #e3edff 100%) !important;
+    background: rgba(255,255,255,0.88) !important;
+    backdrop-filter: blur(10px);
     box-shadow: 4px 0px 15px rgba(0,0,0,0.05);
-    border-right: 1px solid rgba(0,0,0,0.05);
+    border-right: 1px solid rgba(255,255,255,0.3);
 }}
 
-/* THIẾT KẾ RIÊNG CHO TIÊU ĐỀ SIDEBAR */
+section[data-testid="stSidebar"] .stMarkdown,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] span {{
+    color: #111827 !important;
+    font-weight: 600 !important;
+}}
+
+/* SIDEBAR HEADER */
 .sidebar-header {{
     font-size: 1.2rem;
     font-weight: 800;
@@ -61,34 +78,33 @@ section[data-testid="stSidebar"] {{
     border-bottom: 2px solid rgba(79,70,229,0.15);
 }}
 
+/* TITLES */
 h1 {{
     color: #1e1b4b !important;
     font-weight: 800;
     text-align: center;
 }}
 
-input, .stSelectbox, .stSlider {{
+h2 {{
+    color: #1e3a8a !important;
+    font-weight: 700 !important;
+}}
+
+h3 {{
+    color: #1e3a8a !important;
+    font-weight: 700 !important;
+    text-align: center;
+    margin-bottom: 2rem;
+}}
+
+input,
+.stSelectbox,
+.stSlider {{
     border-radius: 12px !important;
 }}
 
 </style>
 """, unsafe_allow_html=True)
-
-h3 {
-    color: #1e3a8a !important;
-    font-weight: 700 !important;
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-h2 {
-    color: #1e3a8a !important;
-    font-weight: 700 !important;
-}
-
-input, .stSelectbox, .stSlider {
-    border-radius: 12px !important;
-}
 
 .stButton > button {
     background: linear-gradient(90deg, #4f46e5, #3b82f6);
