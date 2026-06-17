@@ -44,6 +44,8 @@ st.markdown(
 
     color: #111827;
     font-family: 'Segoe UI', sans-serif;
+    font-weight: 700 !important;
+    font-size: 18px !important;
 }}
 
 /* XỬ LÝ THANH ĐEN ĐỈNH MÀN HÌNH - BIẾN THÀNH TRONG SUỐT */
